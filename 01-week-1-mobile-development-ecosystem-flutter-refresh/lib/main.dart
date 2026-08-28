@@ -4,6 +4,7 @@ void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -16,7 +17,13 @@ class MyApp extends StatelessWidget {
             children: [
               Icon(Icons.school, size: 72),
               SizedBox(height: 16),
-              Text('Agus Prasetyo', style: TextStyle(fontSize: 24)),
+              Text(
+                'Agus Prasetyo',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 8),
+              Text('NIM: 244107020049'),
+              Text('Program Studi: D4 Teknik Informatika'),
               Text('Pemrograman Mobile — Minggu 1'),
             ],
           ),
