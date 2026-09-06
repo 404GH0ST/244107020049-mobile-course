@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+const kWideBreakpoint = 700.0;
+
 void main() => runApp(const DashboardApp());
 
 class DashboardApp extends StatefulWidget {
@@ -68,7 +70,7 @@ class DashboardPage extends StatelessWidget {
       ),
       body: LayoutBuilder(
         builder: (context, constraints) {
-          final isWide = constraints.maxWidth >= 700;
+          final isWide = constraints.maxWidth >= kWideBreakpoint;
           return SingleChildScrollView(
             padding: const EdgeInsets.all(16),
             child: Column(

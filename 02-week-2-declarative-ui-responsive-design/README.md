@@ -89,3 +89,15 @@ Totalnya ada enam kartu informasi berdasarkan data KRS: Mata Kuliah (8), SKS Sem
 | Layar 5 inci, Tema Gelap |
 | :---: |
 | ![5 inci Dark](screenshots/tugas_utama_5inch_dark.png) |
+
+
+## Refactoring Challenge
+
+### Perubahan yang Dilakukan
+
+1. **Widget reusable `InfoCard`**: Kartu informasi sudah diekstrak menjadi widget tersendiri yang menerima `title`, `value`, dan `icon`, sehingga tidak ada duplikasi widget.
+2. **Penggunaan `Theme.of(context)`**: Semua warna dan ukuran teks diambil dari `colorScheme` dan `textTheme` tema aktif, bukan ditulis langsung di kode. Jadi tampilan otomatis ikut berubah saat tema berganti.
+3. **Konstanta breakpoint**: Nilai breakpoint dipindahkan ke satu konstanta bernama `const kWideBreakpoint = 700.0` di level atas file, sehingga hanya didefinisikan satu kali dan mudah diubah.
+4. **`flutter analyze`**: Tidak ditemukan error maupun warning.
+
+![Hasil flutter analyze](screenshots/flutter_analyze.png)
