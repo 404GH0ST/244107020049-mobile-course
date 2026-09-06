@@ -63,3 +63,29 @@ Ikon di samping switch berubah sesuai mode aktif: `Icons.light_mode` (matahari) 
 | Tema Terang (Light Mode) | Tema Gelap (Dark Mode) |
 | :---: | :---: |
 | ![Light Mode](screenshots/interaksi_light.png) | ![Dark Mode](screenshots/interaksi_dark.png) |
+
+
+## Tugas Utama: Academic Overview
+
+### Deskripsi Implementasi
+
+Dashboard dikembangkan menjadi halaman Academic Overview dengan spesifikasi berikut:
+
+- `ProfileHeader`: Widget custom yang menampilkan avatar, nama, NIM, dan program studi di dalam `Container` dengan warna `colorScheme.primaryContainer` agar otomatis menyesuaikan tema.
+- `InfoCard`: Widget reusable yang menerima `title`, `value`, dan `icon`. Setiap kartu menggunakan `Row` dengan `Expanded` untuk menyusun ikon, label, dan nilai secara horizontal.
+- `LayoutBuilder` dengan breakpoint 700px: Menentukan apakah kartu ditampilkan dalam satu kolom (layar sempit) atau dua kolom (layar lebar) menggunakan `Row` + `Expanded`.
+- `SingleChildScrollView`: Membungkus seluruh konten agar dapat di-scroll pada layar yang lebih kecil.
+- `CupertinoSwitch` pada `AppBar`: Toggle tema gelap/terang yang menggunakan komponen Cupertino di dalam aplikasi Material.
+- `Semantics`: Label aksesibilitas ditambahkan pada avatar profil, ikon mode, toggle tema, dan setiap kartu informasi agar bermakna bagi screen reader.
+
+Totalnya ada enam kartu informasi berdasarkan data KRS: Mata Kuliah (8), SKS Semester (19), IP Semester Lalu (4.00), IPK (3.92), Semester (5), dan Kelas (3H). Semua warna diambil dari `Theme.of(context)` supaya teks tetap terbaca di tema terang maupun gelap.
+
+### Tangkapan Layar
+
+| Layar 5 inci, Tema Terang | Layar 10 inci, Tema Terang |
+| :---: | :---: |
+| ![5 inci Light](screenshots/tugas_utama_5inch_light.png) | ![10 inci Light](screenshots/tugas_utama_10inch_light.png) |
+
+| Layar 5 inci, Tema Gelap |
+| :---: |
+| ![5 inci Dark](screenshots/tugas_utama_5inch_dark.png) |

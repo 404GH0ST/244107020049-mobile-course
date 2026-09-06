@@ -45,15 +45,21 @@ class DashboardPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Student Dashboard'),
+        title: const Text('Academic Overview'),
         actions: [
           Row(
             children: [
-              Icon(isDark ? Icons.dark_mode : Icons.light_mode),
+              Semantics(
+                label: isDark ? 'Mode gelap aktif' : 'Mode terang aktif',
+                child: Icon(isDark ? Icons.dark_mode : Icons.light_mode),
+              ),
               const SizedBox(width: 4),
-              CupertinoSwitch(
-                value: isDark,
-                onChanged: onDarkChanged,
+              Semantics(
+                label: 'Toggle tema gelap',
+                child: CupertinoSwitch(
+                  value: isDark,
+                  onChanged: onDarkChanged,
+                ),
               ),
               const SizedBox(width: 12),
             ],
@@ -62,40 +68,156 @@ class DashboardPage extends StatelessWidget {
       ),
       body: LayoutBuilder(
         builder: (context, constraints) {
-          final columns = constraints.maxWidth >= 700 ? 2 : 1;
-          return GridView.count(
+          final isWide = constraints.maxWidth >= 700;
+          return SingleChildScrollView(
             padding: const EdgeInsets.all(16),
-            crossAxisCount: columns,
-            crossAxisSpacing: 16,
-            mainAxisSpacing: 16,
-            childAspectRatio: 2.6,
-            children: const [
-              DashboardCard(title: 'Assignments', value: '8'),
-              DashboardCard(title: 'Attendance', value: '92%'),
-              DashboardCard(title: 'Portfolio', value: 'Ready'),
-              DashboardCard(title: 'Current week', value: '02'),
-            ],
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const ProfileHeader(),
+                const SizedBox(height: 16),
+                _buildCardGrid(context, isWide),
+              ],
+            ),
           );
         },
       ),
     );
   }
+
+  Widget _buildCardGrid(BuildContext context, bool isWide) {
+    const cards = [
+      InfoCard(title: 'Mata Kuliah', value: '8', icon: Icons.menu_book),
+      InfoCard(title: 'SKS Semester', value: '19', icon: Icons.assignment),
+      InfoCard(title: 'IP Semester Lalu', value: '4.00', icon: Icons.star),
+      InfoCard(title: 'IPK', value: '3.92', icon: Icons.school),
+      InfoCard(title: 'Semester', value: '5', icon: Icons.calendar_today),
+      InfoCard(title: 'Kelas', value: '3H', icon: Icons.group),
+    ];
+
+    if (isWide) {
+      final rows = <Widget>[];
+      for (var i = 0; i < cards.length; i += 2) {
+        final second = i + 1 < cards.length ? cards[i + 1] : null;
+        rows.add(Row(
+          children: [
+            Expanded(child: cards[i]),
+            const SizedBox(width: 16),
+            Expanded(child: second ?? const SizedBox.shrink()),
+          ],
+        ));
+        if (i + 2 < cards.length) rows.add(const SizedBox(height: 16));
+      }
+      return Column(children: rows);
+    }
+
+    return Column(
+      children: [
+        for (var i = 0; i < cards.length; i++) ...[
+          cards[i],
+          if (i < cards.length - 1) const SizedBox(height: 16),
+        ],
+      ],
+    );
+  }
 }
 
-class DashboardCard extends StatelessWidget {
-  const DashboardCard({required this.title, required this.value, super.key});
-  final String title;
-  final String value;
+class ProfileHeader extends StatelessWidget {
+  const ProfileHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Row(children: [
-          Expanded(child: Text(title)),
-          Text(value, style: Theme.of(context).textTheme.headlineSmall),
-        ]),
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: colorScheme.primaryContainer,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Row(
+        children: [
+          Semantics(
+            label: 'Foto profil mahasiswa',
+            child: CircleAvatar(
+              radius: 32,
+              backgroundColor: colorScheme.primary,
+              child: Icon(Icons.person, size: 36, color: colorScheme.onPrimary),
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Agus Prasetyo',
+                  style: textTheme.titleLarge?.copyWith(
+                    color: colorScheme.onPrimaryContainer,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'NIM: 244107020049',
+                  style: textTheme.bodyMedium?.copyWith(
+                    color: colorScheme.onPrimaryContainer,
+                  ),
+                ),
+                Text(
+                  'D4 Teknik Informatika - Semester 5',
+                  style: textTheme.bodyMedium?.copyWith(
+                    color: colorScheme.onPrimaryContainer,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class InfoCard extends StatelessWidget {
+  const InfoCard({
+    required this.title,
+    required this.value,
+    required this.icon,
+    super.key,
+  });
+  final String title;
+  final String value;
+  final IconData icon;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
+    return Semantics(
+      label: '$title: $value',
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: colorScheme.secondaryContainer,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(icon, color: colorScheme.onSecondaryContainer),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Text(title, style: textTheme.bodyLarge),
+              ),
+              Text(value, style: textTheme.headlineSmall),
+            ],
+          ),
+        ),
       ),
     );
   }
