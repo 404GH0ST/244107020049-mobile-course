@@ -23,3 +23,23 @@ Pada praktikum warm-up, saya membuat kartu profil sederhana untuk berlatih widge
 ### Tangkapan Layar
 
 ![Kartu Profil Mahasiswa](screenshots/warmup_profile_card.png)
+
+
+## Praktikum Dashboard: Layout Responsif
+
+### Deskripsi Implementasi
+
+Setelah warm-up, saya membangun dashboard mahasiswa yang bisa menyesuaikan layout tergantung lebar layar:
+
+- `MaterialApp` dengan `theme` dan `darkTheme`: Mendukung tema terang dan gelap secara otomatis mengikuti pengaturan sistem.
+- `LayoutBuilder`: Membaca lebar layar yang tersedia (`constraints.maxWidth`) untuk menentukan jumlah kolom secara dinamis.
+- `GridView.count`: Menampilkan kartu-kartu informasi dalam grid dengan `crossAxisCount` yang berubah berdasarkan breakpoint 700 piksel.
+- `DashboardCard` (custom `StatelessWidget`): Widget reusable yang menerima `title` dan `value`, menampilkan informasi dalam `Card` dengan `Row`.
+
+Kalau layar kurang dari 700px, kartu ditampilkan satu kolom. Kalau 700px atau lebih, kartu ditampilkan dua kolom.
+
+### Tangkapan Layar
+
+| Layar 5 inci (1 kolom) | Layar 10 inci (2 kolom) |
+| :---: | :---: |
+| ![Dashboard 5 inci](screenshots/dashboard_5inch.png) | ![Dashboard 10 inci](screenshots/dashboard_10inch.png) |
