@@ -43,3 +43,23 @@ Kalau layar kurang dari 700px, kartu ditampilkan satu kolom. Kalau 700px atau le
 | Layar 5 inci (1 kolom) | Layar 10 inci (2 kolom) |
 | :---: | :---: |
 | ![Dashboard 5 inci](screenshots/dashboard_5inch.png) | ![Dashboard 10 inci](screenshots/dashboard_10inch.png) |
+
+
+## Praktikum Interaksi: StatefulWidget dan Cupertino
+
+### Deskripsi Implementasi
+
+Supaya pengguna bisa ganti tema secara manual, `DashboardApp` diubah menjadi `StatefulWidget`:
+
+- `DashboardApp` menjadi `StatefulWidget`: Menyimpan variabel `isDark` pada objek `State` untuk melacak preferensi tema pengguna.
+- `CupertinoSwitch` (dari package `cupertino`): Widget toggle bergaya iOS di `AppBar` actions untuk ganti tema. Sekaligus menunjukkan bahwa komponen Cupertino bisa dipakai di dalam aplikasi Material.
+- `ValueChanged<bool>` callback: `DashboardPage` menerima state `isDark` dan callback `onDarkChanged` dari parent, mengikuti pola state-lifting yang umum di Flutter.
+- `ThemeMode` bergantung pada state: kalau `isDark` bernilai `true`, tema gelap aktif; kalau `false`, tema terang. Perubahan terjadi langsung tanpa restart.
+
+Ikon di samping switch berubah sesuai mode aktif: `Icons.light_mode` (matahari) untuk tema terang dan `Icons.dark_mode` (bulan sabit) untuk tema gelap.
+
+### Tangkapan Layar
+
+| Tema Terang (Light Mode) | Tema Gelap (Dark Mode) |
+| :---: | :---: |
+| ![Light Mode](screenshots/interaksi_light.png) | ![Dark Mode](screenshots/interaksi_dark.png) |
