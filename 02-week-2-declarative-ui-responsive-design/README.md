@@ -101,3 +101,19 @@ Totalnya ada enam kartu informasi berdasarkan data KRS: Mata Kuliah (8), SKS Sem
 4. **`flutter analyze`**: Tidak ditemukan error maupun warning.
 
 ![Hasil flutter analyze](screenshots/flutter_analyze.png)
+
+
+## Testing Dasar
+
+### Widget Test Responsif
+
+Dua widget test ditambahkan di `test/widget_test.dart` untuk memverifikasi perilaku responsif:
+
+1. **Dashboard satu kolom di layar sempit**: Mengatur ukuran layar virtual ke 400x800 piksel, lalu memverifikasi bahwa lebar `InfoCard` lebih dari 350px (memenuhi seluruh lebar layar, menandakan layout satu kolom).
+2. **Dashboard dua kolom di layar lebar**: Mengatur ukuran layar virtual ke 1200x800 piksel, lalu memverifikasi bahwa lebar `InfoCard` kurang dari 600px (menandakan kartu berbagi ruang dalam dua kolom).
+
+Kedua test memanfaatkan `tester.view.physicalSize` dan `tester.view.devicePixelRatio` untuk mensimulasikan ukuran layar, serta `addTearDown(tester.view.reset)` agar pengaturan dikembalikan setelah test selesai.
+
+Hasil: kedua test lulus (`All tests passed!`).
+
+![Hasil flutter test](screenshots/flutter_test.png)

@@ -1,9 +1,33 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:responsive_dashboard/main.dart';
 
 void main() {
-  testWidgets('DashboardApp smoke test', (WidgetTester tester) async {
+  testWidgets('Dashboard satu kolom di layar sempit', (tester) async {
+    tester.view.physicalSize = const Size(400, 800);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+
     await tester.pumpWidget(const DashboardApp());
-    expect(find.byType(DashboardCard), findsWidgets);
+
+    final cards = find.byType(InfoCard);
+    expect(cards, findsWidgets);
+
+    final firstCard = tester.getSize(find.byType(InfoCard).first);
+    expect(firstCard.width, greaterThan(350));
+  });
+
+  testWidgets('Dashboard dua kolom di layar lebar', (tester) async {
+    tester.view.physicalSize = const Size(1200, 800);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(const DashboardApp());
+
+    final cards = find.byType(InfoCard);
+    expect(cards, findsWidgets);
+
+    final firstCard = tester.getSize(find.byType(InfoCard).first);
+    expect(firstCard.width, lessThan(600));
   });
 }
