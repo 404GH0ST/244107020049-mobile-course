@@ -117,3 +117,97 @@ Kedua test memanfaatkan `tester.view.physicalSize` dan `tester.view.devicePixelR
 Hasil: kedua test lulus (`All tests passed!`).
 
 ![Hasil flutter test](screenshots/flutter_test.png)
+
+## Checklist Verifikasi
+
+- [x] `flutter analyze` tidak menghasilkan error.
+- [x] `flutter test` lulus semua widget test responsif.
+- [x] Aplikasi dapat dijalankan pada ukuran layar sempit (5 inci) dan lebar (10 inci).
+- [x] Dark mode memiliki kontras dan teks yang terbaca.
+- [x] Struktur widget dapat dijelaskan saat code review.
+- [x] Screenshot, folder `test/`, dan README sudah tersimpan pada folder tugas Week 2.
+
+## AI Prompt Challenge
+
+Sumber percakapan: [ChatGPT - Bandingkan Layout Dashboard](https://chatgpt.com/share/6a9d7876-be74-83ec-8643-2a045d6173ab)
+
+### Prompt 1: Perbandingan Tata Letak
+
+**Prompt:** "Bandingkan dua tata letak dashboard akademik untuk Flutter: versi `GridView` dan versi `LayoutBuilder` + `Column`. Jelaskan trade-off responsif dan aksesibilitasnya."
+
+![Prompt 1 dan tabel perbandingan](screenshots/ai_prompt_1a.png)
+
+**Ringkasan Output:**
+
+ChatGPT memberikan tabel perbandingan aspek-aspek kedua pendekatan:
+
+| Aspek | `GridView` | `LayoutBuilder` + `Column` |
+| :--- | :--- | :--- |
+| Responsif | Mudah mengubah jumlah kolom | Lebih fleksibel mengubah keseluruhan layout |
+| Tinggi item | Cenderung seragam | Bebas mengikuti isi |
+| Aksesibilitas | Baik, tetapi perlu memperhatikan urutan grid | Biasanya lebih natural untuk screen reader |
+| Cocok untuk | Menu, fitur, statistik berbentuk card | Dashboard kompleks dan konten heterogen |
+
+![Contoh kode GridView dan LayoutBuilder](screenshots/ai_prompt_1b.png)
+
+Kesimpulan dari AI: `GridView` unggul untuk *responsive sizing* otomatis (semakin lebar layar, semakin banyak card per baris), sedangkan `LayoutBuilder` + `Column` unggul untuk *responsive composition* (struktur dashboard berubah berdasarkan ukuran layar). Untuk dashboard nyata, AI merekomendasikan kombinasi keduanya.
+
+![Trade-off aksesibilitas](screenshots/ai_prompt_1c.png)
+
+**Keputusan:** Menggunakan `LayoutBuilder` + `Column` + `Row` + `Expanded` pada tugas utama karena header profil memiliki tinggi berbeda dari kartu informasi, sehingga `childAspectRatio` seragam dari `GridView` tidak ideal.
+
+### Prompt 2: Penguatan Konsep Expanded
+
+**Prompt:** "Jelaskan kapan penggunaan `Expanded` justru menyebabkan overflow di dalam `Row`, beri contoh kode yang gagal dan perbaikannya."
+
+![Prompt 2 dan awal respons](screenshots/ai_prompt_2a.png)
+
+**Ringkasan Output:**
+
+AI menjelaskan tiga kasus utama kegagalan `Expanded`:
+
+1. **Child dengan ukuran tetap melebihi ruang**: `Expanded` membungkus `Row` yang berisi dua `Container(width: 250)`. Di layar 360px, total kebutuhan 500px menyebabkan overflow. Perbaikan: ganti child dengan `Expanded` juga agar ikut fleksibel.
+2. **Sibling non-flex terlalu lebar**: `Container(width: 300)` dan `Container(width: 100)` sebagai sibling sudah membutuhkan 400px, melebihi ruang 360px. `Expanded` tidak bisa memperbaiki ini. Perbaikan: perkecil ukuran tetap sibling.
+3. **`Row` di dalam `SingleChildScrollView` horizontal**: `Expanded` di dalam scroll horizontal mendapat constraint tak terbatas, menyebabkan assertion error karena konsepnya bertentangan. Perbaikan: hapus `Expanded`, gunakan ukuran eksplisit.
+
+![Contoh kode gagal dan perbaikan](screenshots/ai_prompt_2b.png)
+
+Aturan praktis dari AI: `Expanded` cocok ketika parent memiliki ruang terbatas dan child memang boleh mengecil/membesar mengikuti sisa ruang.
+
+### Prompt 3: Verifikasi
+
+**Prompt:** "Periksa kembali rekomendasi layout di atas: apakah tetap responsif di bawah 600px, apakah mengurangi aksesibilitas, dan apakah ada widget yang tidak tersedia di Flutter stabil saat ini?"
+
+![Prompt 3 dan awal verifikasi](screenshots/ai_prompt_3a.png)
+
+**Ringkasan Output:**
+
+- **Responsivitas di bawah 600px**: `LayoutBuilder` tetap tepat karena membaca constraint dari parent. Di bawah 600px, layout harus berubah ke `Column` agar tidak overflow. AI juga mengoreksi rekomendasi sebelumnya: `GridView` di dalam `SingleChildScrollView` membutuhkan `shrinkWrap: true` dan `NeverScrollableScrollPhysics()` agar tidak konflik scroll.
+
+![Contoh kode responsif di bawah 600px](screenshots/ai_prompt_3b.png)
+
+- **Aksesibilitas**: Tidak berkurang selama urutan widget di tree konsisten dengan urutan visual. AI mengingatkan untuk tidak menambahkan `Semantics` secara berlebihan pada widget yang sudah memiliki semantics bawaan (seperti `ElevatedButton`, `ListTile`), karena duplikasi label membuat screen reader membacakan informasi dua kali.
+
+![Aksesibilitas dan tinggi card](screenshots/ai_prompt_3c.png)
+
+- **Ketersediaan widget**: Semua widget yang direkomendasikan (`LayoutBuilder`, `Column`, `Row`, `Expanded`, `GridView`, `Semantics`, `SingleChildScrollView`, `CustomScrollView`, `FocusTraversalGroup`, `SliverGridDelegateWithMaxCrossAxisExtent`) tersedia di Flutter stable 3.47 saat ini. Tidak ada API eksperimental.
+
+![Kesimpulan akhir dan ketersediaan widget](screenshots/ai_prompt_3d.png)
+
+## Refleksi
+
+### 1. Apa perbedaan cara berpikir imperative dan declarative saat membangun UI?
+
+Kalau imperatif, kita langsung ambil referensi elemen lalu ubah propertinya satu per satu (misalnya `setText()`, `setColor()`). Kalau deklaratif seperti Flutter, kita cukup tulis tampilan yang diinginkan di method `build()` berdasarkan state saat ini. Begitu state berubah, Flutter sendiri yang menentukan bagian mana yang perlu di-render ulang. Kita tidak perlu mengelola peralihan antar-state secara manual.
+
+### 2. Kapan Expanded membantu dan kapan penggunaannya justru menghasilkan layout error?
+
+`Expanded` berguna kalau kita ingin child mengisi sisa ruang yang tersedia di `Row` atau `Column` dengan constraint terbatas. Contohnya, teks panjang di samping ikon supaya tidak meluber keluar layar. Tapi `Expanded` justru bermasalah kalau dipakai di parent tanpa batas lebar, seperti `Row` di dalam `ListView` horizontal atau `SingleChildScrollView` horizontal. Di kondisi itu, Flutter tidak bisa menghitung "sisa ruang" karena ruangnya tak terbatas, sehingga muncul error unbounded constraints.
+
+### 3. Bagaimana breakpoint dan theme memengaruhi pengalaman pengguna?
+
+Breakpoint mengontrol kapan layout berubah dari satu kolom ke dua kolom. Kalau breakpoint-nya terlalu rendah, konten jadi terlalu sempit di layar kecil. Kalau terlalu tinggi, layar besar tidak memanfaatkan ruang yang ada. Theme menyimpan warna, tipografi, dan bentuk komponen di satu tempat sehingga dark mode dan light mode konsisten di seluruh aplikasi. Pengguna tinggal ganti pengaturan sistem, dan tampilan langsung menyesuaikan.
+
+### 4. Apa yang diverifikasi dari rekomendasi AI setelah tugas inti selesai?
+
+Saya memverifikasi rekomendasi AI lewat tiga hal: (1) menjalankan aplikasi di emulator 5 inci dan 10 inci untuk melihat langsung apakah layout responsif benar-benar bekerja, (2) menjalankan `flutter analyze` untuk memastikan tidak ada error atau warning dari widget yang disarankan, dan (3) menjalankan widget test yang mengecek lebar kartu sesuai jumlah kolom yang diharapkan.
