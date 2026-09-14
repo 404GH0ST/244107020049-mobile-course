@@ -1,20 +1,21 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:week3_todo/main.dart';
 
 void main() {
-  testWidgets('Praktikum 1: Navigasi GoRouter dari Home ke Detail',
+  testWidgets('Praktikum 2: Menambah tugas baru dengan Riverpod',
       (tester) async {
-    await tester.pumpWidget(const MyApp());
+    await tester.pumpWidget(const ProviderScope(child: MyApp()));
+    expect(find.text('Belum ada tugas'), findsOneWidget);
+
+    await tester.tap(find.byIcon(Icons.add));
     await tester.pumpAndSettle();
 
-    expect(find.text('Home'), findsOneWidget);
-    expect(find.text('Item 1'), findsOneWidget);
-
-    // Tap on Item 1 to navigate to detail
-    await tester.tap(find.text('Item 1'));
+    await tester.enterText(find.byType(TextField), 'Kerjakan PR minggu 3');
+    await tester.tap(find.text('Tambah'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Detail 1'), findsOneWidget);
-    expect(find.text('Anda membuka item dengan id: 1'), findsOneWidget);
+    expect(find.text('Kerjakan PR minggu 3'), findsOneWidget);
   });
 }
