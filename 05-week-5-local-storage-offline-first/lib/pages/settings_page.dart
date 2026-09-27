@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../data/prefs.dart';
+import '../data/sync.dart';
 
 final prefsRepositoryProvider = Provider((ref) => PrefsRepository());
 
@@ -81,6 +82,40 @@ class SettingsPage extends ConsumerWidget {
                     loading: () => const Text('Membaca preferensi...'),
                     error: (err, _) => Text('Error: $err'),
                   ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
+          Card(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.fromLTRB(16, 16, 16, 8),
+                  child: Text(
+                    'Simulasi Jaringan (Offline-First)',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                SwitchListTile(
+                  title: const Text('Simulasi Mode Offline (Force Offline)'),
+                  subtitle: const Text(
+                    'Uji ketahanan aplikasi saat tidak ada akses jaringan tanpa perlu mematikan Wi-Fi perangkat',
+                  ),
+                  secondary: Icon(
+                    ref.watch(forceOfflineProvider)
+                        ? Icons.cloud_off
+                        : Icons.cloud_queue,
+                    color: ref.watch(forceOfflineProvider) ? Colors.orange : null,
+                  ),
+                  value: ref.watch(forceOfflineProvider),
+                  onChanged: (val) {
+                    ref.read(forceOfflineProvider.notifier).setOffline(val);
+                  },
                 ),
               ],
             ),
