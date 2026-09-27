@@ -88,8 +88,10 @@ final noteRepositoryProvider = Provider<NoteRepository>((ref) {
   return NoteRepository();
 });
 
-final notesProvider =
-    AsyncNotifierProvider<NotesNotifier, List<Note>>(NotesNotifier.new);
+final notesProvider = AsyncNotifierProvider<NotesNotifier, List<Note>>(
+  NotesNotifier.new,
+  retry: (retryCount, error) => null,
+);
 
 class NotesNotifier extends AsyncNotifier<List<Note>> {
   @override
@@ -138,14 +140,16 @@ class NotesNotifier extends AsyncNotifier<List<Note>> {
   }
 }
 
-final dirtyCountProvider = FutureProvider<int>((ref) async {
-  ref.watch(notesProvider);
-  final repo = ref.watch(noteRepositoryProvider);
-  return repo.countDirty();
-});
+final dirtyCountProvider = FutureProvider<int>(
+  (ref) async {
+    final repo = ref.watch(noteRepositoryProvider);
+    return repo.countDirty();
+  },
+  retry: (retryCount, error) => null,
+);
 
 final noteDetailProvider =
     FutureProvider.family<Note?, int>((ref, id) async {
   final repo = ref.watch(noteRepositoryProvider);
   return repo.getNoteById(id);
-});
+}, retry: (retryCount, error) => null);
