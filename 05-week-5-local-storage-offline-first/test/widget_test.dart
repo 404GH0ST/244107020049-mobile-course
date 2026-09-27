@@ -1,30 +1,48 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:myapp/main.dart';
+import 'package:myapp/data/local/note.dart';
+import 'package:myapp/data/repositories/note_repository.dart';
+
+class FakeNoteRepository extends NoteRepository {
+  FakeNoteRepository({this.items = const []})
+      : super(openDb: () => throw UnimplementedError());
+
+  final List<Note> items;
+
+  @override
+  Future<List<Note>> fetchNotes() async => items;
+
+  @override
+  Future<int> countDirty() async => items.where((n) => n.dirty).length;
+}
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('OfflineNotesApp widget smoke test', (WidgetTester tester) async {
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          noteRepositoryProvider.overrideWithValue(
+            FakeNoteRepository(
+              items: [
+                Note(
+                  id: 1,
+                  title: 'Catatan Tes',
+                  body: 'Isi catatan tes',
+                  updatedAt: DateTime(2026, 9, 27),
+                  dirty: false,
+                ),
+              ],
+            ),
+          ),
+        ],
+        child: const OfflineNotesApp(),
+      ),
+    );
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
-
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    await tester.pumpAndSettle();
+    expect(find.text('Offline Notes'), findsOneWidget);
+    expect(find.text('Catatan Tes'), findsOneWidget);
   });
 }
