@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../data/local/note.dart';
 import '../data/repositories/note_repository.dart';
 import '../data/sync.dart';
-import 'cached_posts_page.dart';
-import 'settings_page.dart';
+import '../widgets/note_tile.dart';
 
 final isSyncingProvider =
     NotifierProvider<IsSyncingNotifier, bool>(IsSyncingNotifier.new);
@@ -34,11 +34,7 @@ class NotesPage extends ConsumerWidget {
           IconButton(
             tooltip: 'Lihat Cache-First Posts',
             icon: const Icon(Icons.dynamic_feed_outlined),
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const CachedPostsPage()),
-              );
-            },
+            onPressed: () => context.push('/posts'),
           ),
           IconButton(
             tooltip: 'Sinkronisasi Sekarang',
@@ -58,11 +54,7 @@ class NotesPage extends ConsumerWidget {
           IconButton(
             tooltip: 'Pengaturan',
             icon: const Icon(Icons.settings_outlined),
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const SettingsPage()),
-              );
-            },
+            onPressed: () => context.push('/settings'),
           ),
         ],
       ),
@@ -178,7 +170,15 @@ class NotesPage extends ConsumerWidget {
                     separatorBuilder: (_, _) => const SizedBox(height: 10),
                     itemBuilder: (context, index) {
                       final note = notes[index];
-                      return _buildNoteCard(context, ref, note);
+                      return NoteTile(
+                        note: note,
+                        onTap: () {
+                          if (note.id != null) {
+                            context.push('/note/${note.id}');
+                          }
+                        },
+                        onDelete: () => _confirmDelete(context, ref, note),
+                      );
                     },
                   ),
                 );
@@ -229,115 +229,6 @@ class NotesPage extends ConsumerWidget {
     } finally {
       ref.read(isSyncingProvider.notifier).setSyncing(false);
     }
-  }
-
-  Widget _buildNoteCard(BuildContext context, WidgetRef ref, Note note) {
-    return Card(
-      elevation: 1,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: BorderSide(
-          color: note.dirty
-              ? Theme.of(context).colorScheme.error.withValues(alpha: 0.4)
-              : Theme.of(context).colorScheme.outlineVariant,
-        ),
-      ),
-      child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        title: Row(
-          children: [
-            Expanded(
-              child: Text(
-                note.title,
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ),
-            if (note.dirty)
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                decoration: BoxDecoration(
-                  color: Colors.amber.shade100,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.amber.shade700),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.sync_problem,
-                      size: 14,
-                      color: Colors.amber.shade900,
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      'Belum sync',
-                      style: TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.amber.shade900,
-                      ),
-                    ),
-                  ],
-                ),
-              )
-            else
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                decoration: BoxDecoration(
-                  color: Colors.green.shade50,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.green.shade600),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.cloud_done,
-                      size: 14,
-                      color: Colors.green.shade800,
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      'Tersinkron',
-                      style: TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.green.shade800,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-          ],
-        ),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (note.body.isNotEmpty) ...[
-              const SizedBox(height: 6),
-              Text(
-                note.body,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
-            const SizedBox(height: 8),
-            Text(
-              'Diperbarui: ${_formatDateTime(note.updatedAt)}',
-              style: TextStyle(
-                fontSize: 12,
-                color: Theme.of(context).colorScheme.outline,
-              ),
-            ),
-          ],
-        ),
-        trailing: IconButton(
-          icon: const Icon(Icons.delete_outline, color: Colors.red),
-          tooltip: 'Hapus Catatan',
-          onPressed: () => _confirmDelete(context, ref, note),
-        ),
-      ),
-    );
   }
 
   void _showAddNoteDialog(BuildContext context, WidgetRef ref) {
@@ -415,15 +306,5 @@ class NotesPage extends ConsumerWidget {
         ],
       ),
     );
-  }
-
-  String _formatDateTime(DateTime dt) {
-    final local = dt.toLocal();
-    final day = local.day.toString().padLeft(2, '0');
-    final month = local.month.toString().padLeft(2, '0');
-    final year = local.year;
-    final hour = local.hour.toString().padLeft(2, '0');
-    final minute = local.minute.toString().padLeft(2, '0');
-    return '$day/$month/$year $hour:$minute';
   }
 }
