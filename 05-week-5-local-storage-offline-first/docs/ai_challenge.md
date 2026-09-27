@@ -76,7 +76,7 @@ Berdasarkan *AI Verification Checklist* pada panduan Codelab, berikut adalah eva
 | **Kompleksitas Query** | Sangat Rendah (Key-Value murni) | Rendah (Pencarian linier / Box key) | **Sangat Tinggi (SQL lengkap, WHERE, ORDER BY, LIMIT, OFFSET, JOIN)** | **Sangat Tinggi (SQL & Dart Fluent API)** |
 | **Kebutuhan Relasi** | Tidak Ada | Terbatas (harus manual via HiveList) | **Didukung Penuh (Foreign Key, JOIN, Cascade)** | **Didukung Penuh (Type-safe Relations)** |
 | **Reaktivitas (Stream)** | Tidak Ada | Terbatas (`watch()` pada Box) | Melalui Riverpod / ValueNotifier | **Native (`watch()` langsung mengembalikan Stream)** |
-| **Type-Safety** | Primitif saja (int, double, bool, String) | Ya (melalui TypeAdapter generator) | Parsial (Map<String, Object?> dengan manual parsing) | **Penuh (Compile-time type checked)** |
+| **Type-Safety** | Primitif saja (int, double, bool, String) | Ya (melalui TypeAdapter generator) | Parsial (`Map<String, Object?>` dengan manual parsing) | **Penuh (Compile-time type checked)** |
 | **Ukuran Boilerplate** | **Nol / Sangat Kecil** (langsung pakai) | Sedang (perlu TypeAdapter & register) | **Rendah (hanya openDatabase & SQL string)** | Sangat Tinggi (butuh `build_runner`, file `.g.dart`) |
 | **Kemudahan Testing** | Sangat Mudah (Mock / Fake) | Sedang (perlu in-memory directory) | **Sangat Mudah (Constructor Dependency Injection `openDb`)** | Sedang (perlu in-memory database mock) |
 | **Kesesuaian Penggunaan** | **Preferensi Aplikasi (Tema, Timestamp)** | Cache objek sederhana tanpa relasi | **Aplikasi Catatan Offline, Sync Queue, Cache API** | Aplikasi Skala Besar dengan relasi kompleks & migrasi berkala |
@@ -112,7 +112,7 @@ CREATE TABLE cached_posts (
 ### Penjelasan Optimasi Skema:
 1. **`updated_at TEXT NOT NULL`**: Menyimpan timestamp dalam format ISO 8601 (`YYYY-MM-DDTHH:MM:SS.mmmZ`). Memungkinkan pengurutan catatan terbaru secara leksikografis instan tanpa konversi runtime.
 2. **`dirty INTEGER NOT NULL DEFAULT 0`**: Berfungsi sebagai bendera sinkronisasi (*dirty flag*). Nilai `1` menandakan data dibuat/diubah secara lokal dan mengantre untuk di-push ke server. Nilai `0` menandakan data sudah tersinkronisasi bersih.
-3. **Indeks Sebagian (*Partial Index*) `idx_notes_dirty`**: Hanya mengindeks baris dengan `dirty = 1`. Saat ada 10.000 catatan namun hanya 3 yang kotor, fungsi `countDirty()` dan query antrean sinkronisasi berjalan dalam $O(1)$ tanpa perlu memindai (*full-table scan*) seluruh basis data.
+3. **Indeks Sebagian (*Partial Index*) `idx_notes_dirty`**: Hanya mengindeks baris dengan `dirty = 1`. Saat ada 10.000 catatan namun hanya 3 yang kotor, fungsi `countDirty()` dan query antrean sinkronisasi berjalan dalam O(1) tanpa perlu memindai (*full-table scan*) seluruh basis data.
 4. **Pemisahan Cache API (`cached_posts`)**: Menghindari pencampuran entitas catatan pengguna dengan cache respons server JSONPlaceholder.
 
 ---
@@ -121,7 +121,9 @@ CREATE TABLE cached_posts (
 
 Dalam arsitektur *Offline-First*, konflik data dapat terjadi jika pengguna mengubah catatan yang sama di dua perangkat berbeda saat offline. Pada implementasi ini, ditetapkan aturan **Last-Write-Wins (LWW)**:
 
-$$\text{Pemenang} = \max(\text{lokal.updated\_at}, \text{remote.updated\_at})$$
+```text
+Pemenang = max(lokal.updated_at, remote.updated_at)
+```
 
 1. **Kasus 1 (Lokal Lebih Baru):** Jika `lokal.updated_at > remote.updated_at`, catatan lokal diunggah dan menimpa versi remote di server.
 2. **Kasus 2 (Remote Lebih Baru):** Jika server memiliki rekaman dengan `remote.updated_at > lokal.updated_at`, perubahan server diterima ke database SQLite lokal dan `dirty` disetel kembali ke `0`.
