@@ -1,0 +1,284 @@
+import 'dart:async';
+
+import 'package:dio/dio.dart';
+
+import '../firebase_options.dart';
+
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
+String routeFromMessage(Map<String, dynamic> data) {
+  final value = data['route'];
+  if (value is! String || value.trim().isEmpty) return '/';
+  final route = value.startsWith('/') ? value : '/$value';
+  return RegExp(r'^/pengumuman/[a-zA-Z0-9_-]+$').hasMatch(route) ? route : '/';
+}
+
+@pragma('vm:entry-point')
+Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  // Isolate terpisah: jangan akses BuildContext, router, atau Riverpod.
+  // Notification payload ditampilkan Android; jangan buat banner kedua.
+  debugPrint(
+    '[FCM] background id=${message.messageId} route=${routeFromMessage(message.data)}',
+  );
+}
+
+class PushService extends ChangeNotifier {
+  PushService({
+    required this.firebaseReady,
+    required this.dio,
+    required this.mockBackend,
+  });
+  final bool firebaseReady;
+  final Dio dio;
+  final bool mockBackend;
+  final _local = FlutterLocalNotificationsPlugin();
+  final List<StreamSubscription<dynamic>> _subscriptions = [];
+  void Function(String)? _go;
+  Future<void>? _starting;
+  Future<void>? _enabling;
+  String? _token;
+  bool _signedIn = false;
+  bool subscribed = false;
+  bool busy = false;
+  String permission = 'Belum diminta';
+  String registration = 'Belum terdaftar';
+  String status = 'Menyiapkan layanan';
+  final List<String> events = [];
+  String get maskedToken => _token == null
+      ? 'Belum tersedia'
+      : '${_token!.substring(0, _token!.length < 12 ? _token!.length : 12)}…';
+  static const topic = 'pengumuman-kampus';
+  static const channel = AndroidNotificationChannel(
+    'pengumuman',
+    'Pengumuman Kampus',
+    description: 'Informasi perkuliahan',
+    importance: Importance.high,
+  );
+
+  void _event(String text) {
+    events.insert(0, text);
+    if (events.length > 12) events.removeLast();
+    debugPrint('[FCM] $text');
+    notifyListeners();
+  }
+
+  Future<void> start(void Function(String) go) {
+    _go = go;
+    return _starting ??= _start();
+  }
+
+  Future<void> _start() async {
+    if (!firebaseReady) {
+      status = 'Firebase belum dikonfigurasi. Tambahkan google-services.json lalu build ulang.';
+      notifyListeners();
+      return;
+    }
+    try {
+      await _local.initialize(
+        settings: const InitializationSettings(
+          android: AndroidInitializationSettings('ic_notification'),
+          iOS: DarwinInitializationSettings(
+            requestAlertPermission: false,
+            requestBadgePermission: false,
+            requestSoundPermission: false,
+          ),
+        ),
+        onDidReceiveNotificationResponse: (response) {
+          final route = routeFromMessage({'route': response.payload});
+          _event('foreground-click route=$route');
+          _go?.call(route);
+        },
+      );
+      await _local
+          .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin
+          >()
+          ?.createNotificationChannel(channel);
+      // iOS: hanya local notification yang present saat foreground, cegah duplikasi.
+      await FirebaseMessaging.instance
+          .setForegroundNotificationPresentationOptions(
+            alert: false,
+            badge: false,
+            sound: false,
+          );
+      _subscriptions.add(
+        FirebaseMessaging.onMessage.listen((message) {
+          unawaited(_foreground(message));
+        }),
+      );
+      _subscriptions.add(
+        FirebaseMessaging.onMessageOpenedApp.listen((message) {
+          final route = routeFromMessage(message.data);
+          _event('background-click id=${message.messageId} route=$route');
+          _go?.call(route);
+        }),
+      );
+      _subscriptions.add(
+        FirebaseMessaging.instance.onTokenRefresh.listen(
+          (token) {
+            unawaited(_registerToken(token, source: 'onTokenRefresh'));
+          },
+          onError: (Object _) {
+            _event('Token refresh gagal; coba aktifkan notifikasi kembali.');
+          },
+        ),
+      );
+      final initial = await FirebaseMessaging.instance.getInitialMessage();
+      if (initial != null) {
+        final route = routeFromMessage(initial.data);
+        _event('terminated-click id=${initial.messageId} route=$route');
+        _go?.call(route);
+      }
+      final localInitial = await _local.getNotificationAppLaunchDetails();
+      if (localInitial?.didNotificationLaunchApp == true) {
+        final route = routeFromMessage({
+          'route': localInitial?.notificationResponse?.payload,
+        });
+        _event('local-terminated-click route=$route');
+        _go?.call(route);
+      }
+      status = 'Firebase siap';
+      notifyListeners();
+    } catch (_) {
+      status = 'Inisialisasi notifikasi gagal. Periksa konfigurasi Firebase.';
+      notifyListeners();
+    }
+  }
+
+  Future<void> _foreground(RemoteMessage message) async {
+    _event(
+      'foreground id=${message.messageId} route=${routeFromMessage(message.data)}',
+    );
+    // Data-only dicatat tanpa banner; gabungan notification + data ditampilkan lokal.
+    if (message.notification == null) return;
+    try {
+      await _local.show(
+        id: message.messageId.hashCode & 0x7fffffff,
+        title: message.notification!.title ?? 'Pengumuman',
+        body: message.notification!.body,
+        notificationDetails: const NotificationDetails(
+          android: AndroidNotificationDetails(
+            'pengumuman',
+            'Pengumuman Kampus',
+            icon: 'ic_notification',
+            importance: Importance.high,
+            priority: Priority.high,
+          ),
+          iOS: DarwinNotificationDetails(
+            presentAlert: true,
+            presentBanner: true,
+            presentSound: true,
+          ),
+        ),
+        payload: routeFromMessage(message.data),
+      );
+    } catch (_) {
+      _event('Gagal menampilkan banner lokal.');
+    }
+  }
+
+  Future<void> syncSession(bool signedIn) async {
+    _signedIn = signedIn;
+    if (signedIn) {
+      await enable();
+    } else {
+      if (firebaseReady && subscribed) {
+        try {
+          await FirebaseMessaging.instance.unsubscribeFromTopic(topic);
+        } catch (_) {
+          _event('Unsubscribe gagal; coba kembali saat jaringan tersedia.');
+        }
+      }
+      subscribed = false;
+      registration = 'Sesi belum login';
+      notifyListeners();
+    }
+  }
+
+  Future<void> enable() =>
+      _enabling ??= _enable().whenComplete(() => _enabling = null);
+  Future<void> _enable() async {
+    await _starting;
+    if (!firebaseReady || !_signedIn) return;
+    busy = true;
+    notifyListeners();
+    try {
+      // Android 13+: POST_NOTIFICATIONS. iOS: alert/badge/sound dan APNs diperlukan.
+      final settings = await FirebaseMessaging.instance.requestPermission(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
+      permission = settings.authorizationStatus.name;
+      if (settings.authorizationStatus != AuthorizationStatus.authorized &&
+          settings.authorizationStatus != AuthorizationStatus.provisional) {
+        status = 'Izin notifikasi belum diberikan';
+        return;
+      }
+      final token = await FirebaseMessaging.instance.getToken();
+      if (token == null) {
+        status = 'Token belum tersedia. Periksa Google Play Services.';
+        return;
+      }
+      await _registerToken(token, source: 'getToken');
+      if (_signedIn) await setTopic(true);
+      status = 'Notifikasi aktif';
+    } catch (_) {
+      status = 'Gagal mengaktifkan notifikasi. Periksa koneksi dan konfigurasi Firebase.';
+    } finally {
+      busy = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> _registerToken(String token, {required String source}) async {
+    _token = token;
+    if (!_signedIn) {
+      registration = 'Menunggu login';
+      notifyListeners();
+      return;
+    }
+    try {
+      await dio.post<dynamic>(
+        '/devices',
+        data: {'fcm_token': token, 'platform': defaultTargetPlatform.name},
+      );
+      registration = mockBackend
+          ? 'POST /devices diterima • backend simulasi'
+          : 'POST /devices diterima backend';
+      _event(
+        '$source → POST /devices berhasil${mockBackend ? ' (simulasi)' : ''}',
+      );
+    } catch (_) {
+      registration = 'POST /devices gagal • coba lagi';
+      _event('$source → registrasi perangkat gagal');
+    }
+  }
+
+  Future<void> setTopic(bool enabled) async {
+    if (!firebaseReady || !_signedIn) return;
+    try {
+      if (enabled) {
+        await FirebaseMessaging.instance.subscribeToTopic(topic);
+      } else {
+        await FirebaseMessaging.instance.unsubscribeFromTopic(topic);
+      }
+      subscribed = enabled;
+      _event('${enabled ? 'subscribe' : 'unsubscribe'} topic=$topic');
+    } catch (_) {
+      _event('Perubahan langganan topik gagal.');
+    }
+  }
+
+  @override
+  void dispose() {
+    for (final subscription in _subscriptions) {
+      unawaited(subscription.cancel());
+    }
+    super.dispose();
+  }
+}
