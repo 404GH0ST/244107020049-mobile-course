@@ -15,6 +15,7 @@ import 'pages/announcement_page.dart';
 import 'pages/home_page.dart';
 import 'pages/login_page.dart';
 import 'providers/auth_provider.dart';
+import 'routes.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,25 +43,27 @@ final routerProvider = Provider((ref) {
   final refresh = ValueNotifier(0);
   ref.listen(authStateProvider, (_, _) => refresh.value++);
   final router = GoRouter(
-    initialLocation: '/',
+    initialLocation: AppRoutes.home,
     refreshListenable: refresh,
     redirect: (context, state) {
       final loggedIn = ref.read(authStateProvider).value ?? false;
-      final login = state.matchedLocation == '/login';
+      final login = state.matchedLocation == AppRoutes.login;
       if (!loggedIn && !login) {
         return Uri(
-          path: '/login',
+          path: AppRoutes.login,
           queryParameters: {'from': state.uri.toString()},
         ).toString();
       }
-      if (loggedIn && login) return state.uri.queryParameters['from'] ?? '/';
+      if (loggedIn && login) {
+        return routeFromMessage({'route': state.uri.queryParameters['from']});
+      }
       return null;
     },
     routes: [
-      GoRoute(path: '/login', builder: (_, _) => const LoginPage()),
-      GoRoute(path: '/', builder: (_, _) => const HomePage()),
+      GoRoute(path: AppRoutes.login, builder: (_, _) => const LoginPage()),
+      GoRoute(path: AppRoutes.home, builder: (_, _) => const HomePage()),
       GoRoute(
-        path: '/pengumuman/:id',
+        path: AppRoutes.announcementPattern,
         builder: (_, state) =>
             AnnouncementPage(id: state.pathParameters['id']!),
       ),

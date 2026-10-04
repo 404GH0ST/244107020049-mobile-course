@@ -3,18 +3,12 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 
 import '../firebase_options.dart';
+import '../routes.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-
-String routeFromMessage(Map<String, dynamic> data) {
-  final value = data['route'];
-  if (value is! String || value.trim().isEmpty) return '/';
-  final route = value.startsWith('/') ? value : '/$value';
-  return RegExp(r'^/pengumuman/[a-zA-Z0-9_-]+$').hasMatch(route) ? route : '/';
-}
 
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {

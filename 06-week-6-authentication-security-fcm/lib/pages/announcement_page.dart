@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../routes.dart';
+
 class AnnouncementPage extends StatelessWidget {
   const AnnouncementPage({super.key, required this.id});
   final String id;
@@ -9,7 +11,7 @@ class AnnouncementPage extends StatelessWidget {
     appBar: AppBar(
       title: Text('Pengumuman #$id'),
       leading: IconButton(
-        onPressed: () => context.go('/'),
+        onPressed: () => context.go(AppRoutes.home),
         icon: const Icon(Icons.arrow_back),
       ),
     ),
@@ -27,7 +29,7 @@ class AnnouncementPage extends StatelessWidget {
           'Kelas Mobile pindah ke Ruang A2 jam 13.00. Silakan menyesuaikan jadwal perkuliahan.',
         ),
         const SizedBox(height: 24),
-        Text('Tujuan deep link: /pengumuman/$id'),
+        Text('Tujuan deep link: ${AppRoutes.announcement(id)}'),
       ],
     ),
   );

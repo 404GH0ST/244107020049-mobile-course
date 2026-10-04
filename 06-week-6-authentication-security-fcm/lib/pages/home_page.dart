@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 
 import '../providers/auth_provider.dart';
 import '../providers/push_provider.dart';
+import '../routes.dart';
+import '../data/api_errors.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -33,9 +35,9 @@ class _HomePageState extends ConsumerState<HomePage> {
           () => _result = result.data?['message'] as String? ?? 'Sukses',
         );
       }
-    } catch (_) {
+    } catch (error) {
       if (mounted) {
-        setState(() => _result = 'Sesi berakhir. Silakan login kembali.');
+        setState(() => _result = apiErrorMessage(error));
       }
     } finally {
       if (mounted) setState(() => _busy = false);
@@ -67,7 +69,7 @@ class _HomePageState extends ConsumerState<HomePage> {
             title: const Text('Jadwal kuliah berubah'),
             subtitle: const Text('Contoh pengumuman #3'),
             trailing: const Icon(Icons.chevron_right),
-            onTap: () => context.go('/pengumuman/3'),
+            onTap: () => context.go(AppRoutes.announcement('3')),
           ),
         ),
         const SizedBox(height: 24),
