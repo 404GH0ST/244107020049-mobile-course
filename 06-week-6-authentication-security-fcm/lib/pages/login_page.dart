@@ -91,10 +91,11 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     onPressed: auth.isLoading
                         ? null
                         : () {
-                            if (_form.currentState!.validate())
+                            if (_form.currentState!.validate()) {
                               ref
                                   .read(authStateProvider.notifier)
                                   .login(_email.text, _password.text);
+                            }
                           },
                     child: Text(auth.isLoading ? 'Memuat sesi…' : 'Masuk'),
                   ),

@@ -4,6 +4,11 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
+// Firebase configuration is supplied locally, never substituted with fake values.
+if (file("google-services.json").exists()) {
+    apply(plugin = "com.google.gms.google-services")
+}
+
 android {
     namespace = "id.ac.polinema.campus_notify"
     compileSdk = flutter.compileSdkVersion

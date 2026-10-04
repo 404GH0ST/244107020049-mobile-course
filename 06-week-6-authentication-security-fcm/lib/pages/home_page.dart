@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../providers/auth_provider.dart';
+import '../providers/push_provider.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -18,21 +19,24 @@ class _HomePageState extends ConsumerState<HomePage> {
     setState(() => _busy = true);
     try {
       final store = ref.read(tokenStoreProvider);
-      if (failRefresh)
+      if (failRefresh) {
         await store.save(access: (await store.readAccess())!, refresh: '');
+      }
       final result = await ref
           .read(apiClientProvider)
           .get<Map<String, dynamic>>(
             '/profile',
             options: Options(extra: {'expireAccess': true}),
           );
-      if (mounted)
+      if (mounted) {
         setState(
           () => _result = result.data?['message'] as String? ?? 'Sukses',
         );
+      }
     } catch (_) {
-      if (mounted)
+      if (mounted) {
         setState(() => _result = 'Sesi berakhir. Silakan login kembali.');
+      }
     } finally {
       if (mounted) setState(() => _busy = false);
     }
@@ -67,6 +71,68 @@ class _HomePageState extends ConsumerState<HomePage> {
           ),
         ),
         const SizedBox(height: 24),
+        ListenableBuilder(
+          listenable: ref.watch(pushServiceProvider),
+          builder: (context, _) {
+            final push = ref.read(pushServiceProvider);
+            return Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Notifikasi Firebase',
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                    const SizedBox(height: 12),
+                    Text(push.status),
+                    Text('Izin: ${push.permission}'),
+                    Text('Token FCM: ${push.maskedToken}'),
+                    Text(push.registration),
+                    SwitchListTile(
+                      contentPadding: EdgeInsets.zero,
+                      title: const Text('Pengumuman kampus'),
+                      subtitle: const Text('Topik broadcast'),
+                      value: push.subscribed,
+                      onChanged: push.firebaseReady && !push.busy
+                          ? push.setTopic
+                          : null,
+                    ),
+                    OutlinedButton(
+                      onPressed: push.firebaseReady && !push.busy
+                          ? push.enable
+                          : null,
+                      child: Text(
+                        push.busy
+                            ? 'Memproses…'
+                            : 'Aktifkan / daftar ulang notifikasi',
+                      ),
+                    ),
+                    TextButton.icon(
+                      onPressed: push.firebaseReady && !push.busy
+                          ? push.rotateToken
+                          : null,
+                      icon: const Icon(Icons.refresh),
+                      label: const Text('Uji perubahan token FCM'),
+                    ),
+                    if (push.events.isNotEmpty) ...[
+                      const SizedBox(height: 12),
+                      const Text('Log lifecycle (tanpa token penuh)'),
+                      for (final event in push.events.take(5))
+                        Text(
+                          event,
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                    ],
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
+        const SizedBox(height: 24),
+
         Text('Keamanan sesi', style: Theme.of(context).textTheme.titleLarge),
         const Text('Access dan refresh token disimpan di secure storage.'),
         if (useMockApi) ...[

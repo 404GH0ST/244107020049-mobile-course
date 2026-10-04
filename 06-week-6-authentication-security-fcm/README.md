@@ -27,3 +27,34 @@ Dokumentasi dan laporan tugas praktikum Minggu 6 mata kuliah Pemrograman Mobile.
 ### Tangkapan Layar
 
 Bukti emulator akan ditambahkan setelah aplikasi dijalankan.
+
+---
+
+## Praktikum 2: Firebase, Permission, dan Token Lifecycle
+
+### Deskripsi Implementasi
+
+`PushService` meminta permission Android 13+, mengambil token FCM, dan mendaftarkannya melalui `POST /devices`. Listener `onTokenRefresh` memanggil registrasi yang sama. UI hanya menampilkan 12 karakter awal token. Mode default menggunakan adapter backend simulasi; kontrak endpoint produksi akan didokumentasikan di `docs/`.
+
+Konfigurasi Firebase pengguna dan pembuktian penerimaan pesan masih menunggu setup project.
+
+---
+
+## Praktikum 3: App State, Deep Link, dan Topic Messaging
+
+### Deskripsi Implementasi
+
+- Foreground: `onMessage` menampilkan local notification untuk payload gabungan; klik meneruskan rute ke GoRouter.
+- Background: Android menampilkan notification payload; `onMessageOpenedApp` menangani klik.
+- Terminated: `getInitialMessage` dikonsumsi setelah router siap.
+- Background handler top-level memakai `@pragma('vm:entry-point')`, tanpa BuildContext atau Riverpod.
+- Subscribe/unsubscribe `pengumuman-kampus` dari UI, dan unsubscribe saat sesi logout.
+- Data-only dicatat tanpa banner. Navigasi hanya memakai rute internal yang diizinkan.
+
+### Matriks Pengujian
+
+| State | Yang diharapkan | Hasil |
+| :--- | :--- | :--- |
+| Foreground | Banner lokal; klik ke `/pengumuman/3` | Menunggu konfigurasi Firebase |
+| Background | Banner sistem; klik ke `/pengumuman/3` | Menunggu konfigurasi Firebase |
+| Terminated | `getInitialMessage`; membuka `/pengumuman/3` | Menunggu konfigurasi Firebase |

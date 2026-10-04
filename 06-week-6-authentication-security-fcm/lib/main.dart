@@ -1,4 +1,13 @@
+import 'dart:async';
+
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+
+import 'firebase_options.dart';
+import 'messaging/push_service.dart';
+import 'providers/push_provider.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -7,9 +16,26 @@ import 'pages/home_page.dart';
 import 'pages/login_page.dart';
 import 'providers/auth_provider.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const ProviderScope(child: CampusApp()));
+  var firebaseReady = false;
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+    firebaseReady = true;
+  } catch (_) {
+    debugPrint(
+      '[FCM] Firebase belum dikonfigurasi; login mock tetap tersedia.',
+    );
+  }
+  runApp(
+    ProviderScope(
+      overrides: [firebaseReadyProvider.overrideWithValue(firebaseReady)],
+      child: const CampusApp(),
+    ),
+  );
 }
 
 final routerProvider = Provider((ref) {
@@ -21,11 +47,12 @@ final routerProvider = Provider((ref) {
     redirect: (context, state) {
       final loggedIn = ref.read(authStateProvider).value ?? false;
       final login = state.matchedLocation == '/login';
-      if (!loggedIn && !login)
+      if (!loggedIn && !login) {
         return Uri(
           path: '/login',
           queryParameters: {'from': state.uri.toString()},
         ).toString();
+      }
       if (loggedIn && login) return state.uri.queryParameters['from'] ?? '/';
       return null;
     },
@@ -46,16 +73,42 @@ final routerProvider = Provider((ref) {
   return router;
 });
 
-class CampusApp extends ConsumerWidget {
+class CampusApp extends ConsumerStatefulWidget {
   const CampusApp({super.key});
   @override
-  Widget build(BuildContext context, WidgetRef ref) => MaterialApp.router(
-    title: 'Campus Notify',
-    debugShowCheckedModeBanner: false,
-    theme: ThemeData(
-      colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xff1769aa)),
-      useMaterial3: true,
-    ),
-    routerConfig: ref.watch(routerProvider),
-  );
+  ConsumerState<CampusApp> createState() => _CampusAppState();
+}
+
+class _CampusAppState extends ConsumerState<CampusApp> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final push = ref.read(pushServiceProvider);
+      await push.start(ref.read(routerProvider).go);
+      if (mounted) {
+        await push.syncSession(ref.read(authStateProvider).value ?? false);
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    ref.listen(authStateProvider, (_, next) {
+      if (next.hasValue && !next.isLoading) {
+        unawaited(
+          ref.read(pushServiceProvider).syncSession(next.value ?? false),
+        );
+      }
+    });
+    return MaterialApp.router(
+      title: 'Campus Notify',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xff1769aa)),
+        useMaterial3: true,
+      ),
+      routerConfig: ref.watch(routerProvider),
+    );
+  }
 }
