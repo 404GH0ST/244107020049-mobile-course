@@ -50,7 +50,7 @@ terbatas. Pemisahan ke event stream belum diperlukan oleh praktikum ini.
 
 ## Pemetaan semua file lama
 
-| File Week 6 di `lib/` | Layer/masalah awal | Tujuan yang diusulkan |
+| File Week 6 di `lib/` | Layer/masalah awal | Tujuan final |
 | --- | --- | --- |
 | `main.dart` | Bootstrap, router, dan lifecycle app satu file | Pecah `main.dart`, `app/router.dart`, `app/campus_app.dart` |
 | `routes.dart` | Konstanta dan parsing rute bercampur | Konstanta tetap; parser ke `core/format.dart` |
@@ -67,45 +67,65 @@ terbatas. Pemisahan ke event stream belum diperlukan oleh praktikum ini.
 | `providers/push_provider.dart` | Wiring implementasi Firebase | Wiring ke app; adapter `PushController` ke push presentation |
 | `firebase_options.dart` (lokal) | Konfigurasi client Firebase | Tetap bootstrap/data, diabaikan Git |
 
-Folder lama akan dihapus setelah presentation dialihkan pada Praktikum 3.
+Folder lama `data/`, `pages/`, `providers/`, `messaging/` dihapus setelah pemetaan.
 Project Android/iOS, app ID, asset, dan dependency mengikuti Week 6. Tidak menjalankan
 `flutter create` dan tidak menambah fitur atau package.
 
+## Usulan versus keputusan implementasi
 
-Status: pemetaan di atas merupakan rencana sebelum implementasi. Audit dan struktur target ada di [README project asal](../../06-week-6-authentication-security-fcm/README.md#audit-project-lama-untuk-minggu-7-praktikum-1).
+| Usulan/opsi | Keputusan | Alasan teknis |
+| --- | --- | --- |
+| Feature-first tiga layer | Diterapkan pada auth dan announcements; push juga dipisah | Kontrak fitur dapat diuji tanpa SDK dan widget |
+| Repository interface di domain | Diterapkan | Data impl dan fake bergantung pada kontrak domain |
+| Entity dan model terpisah | Diterapkan | `AnnouncementModel.fromJson/toEntity` di data; entity hanya nilai bisnis |
+| Use case untuk semua CRUD | Tidak dipakai | Wrapper fetch daftar, restore, logout satu baris hanya menambah wiring |
+| `Login` dan `GetAnnouncement` | Diterapkan | Validasi/normalisasi serta urutan login→simpan; ID divalidasi sebelum baca data |
+| Riverpod untuk DI | Diterapkan tanpa package lain | Sudah dipakai Week 6; repository bisa di-override saat test |
+| Home di fitur announcements | Dipilih `app/presentation` | Home menggabungkan auth, announcements, dan push |
+| Notifier auth diimpor oleh composition root | Dipisahkan melalui sinyal expiry | Menghindari cycle wiring→notifier→wiring |
+| Memecah seluruh callback FCM | Tidak dilakukan | Mempertahankan lifecycle Week 6; cukup pisahkan HTTP registrasi dan adapter UI |
+| `Result<T>` berupa record Dart | Diterapkan | Failure eksplisit tanpa dependency functional tambahan |
 
-## Hasil Audit Sebelum Refactor
+## Contoh wiring DI yang digunakan
 
-```text
-Baseline: git snapshot 6d1b4f7; source lib sebelum refactor.
-1. Widget menyentuh SDK
-pattern: Dio\(|http\.|openDatabase|SharedPreferences\.getInstance|FlutterSecureStorage
-exit: 1
-(nol hasil)
-2. Logika di widget
-pattern: DateFormat|jsonDecode|\.toIso8601String
-exit: 1
-(nol hasil)
-3. Instansiasi manual
-pattern: Repository\(|Dio\(BaseOptions
-exit: 0
-providers/auth_provider.dart:9:final authRepositoryProvider = Provider((ref) => AuthRepository());
-
-4. Akses tidak langsung yang terlewat regex modul
-pattern: apiClientProvider|tokenStoreProvider|Options\(|response\.data|result\.data
-exit: 0
-providers/push_provider.dart:10:    dio: ref.watch(apiClientProvider),
-providers/auth_provider.dart:8:final tokenStoreProvider = Provider((ref) => TokenStore());
-providers/auth_provider.dart:12:final apiClientProvider = Provider((ref) {
-providers/auth_provider.dart:14:    ref.watch(tokenStoreProvider),
-providers/auth_provider.dart:30:    final store = ref.watch(tokenStoreProvider);
-providers/auth_provider.dart:46:          .read(tokenStoreProvider)
-providers/auth_provider.dart:53:    await ref.read(tokenStoreProvider).clear();
-pages/home_page.dart:23:      final store = ref.read(tokenStoreProvider);
-pages/home_page.dart:28:          .read(apiClientProvider)
-pages/home_page.dart:31:            options: Options(extra: {'expireAccess': true}),
-pages/home_page.dart:35:          () => _result = result.data?['message'] as String? ?? 'Sukses',
+```dart
+final announcementRepositoryProvider = Provider<AnnouncementRepository>(
+  (ref) => AnnouncementRepositoryImpl(ref.watch(announcementSourceProvider)),
+);
+final getAnnouncementProvider = Provider(
+  (ref) => GetAnnouncement(ref.watch(announcementRepositoryProvider)),
+);
 ```
+
+Wiring implementasi berada di `app/providers.dart`; provider state di presentation
+memakai provider kontrak/use case. Ini adalah composition root yang diizinkan
+mengetahui implementasi. Data dan domain tidak mengimpor presentation. Pemeriksaan
+graf juga memeriksa cycle, bukan hanya nama folder.
+
+## AI Verification Checklist
+
+| Pertanyaan modul | Bukti |
+| --- | --- |
+| Interface domain, implementasi data? | `features/{auth,announcements}/domain/repositories` dan `data/repositories` |
+| Domain bebas Flutter/Dio/SQLite/Firebase? | Tiga grep di bawah; domain/core bebas seluruh import package |
+| Use case tidak berlebihan? | Hanya `Login` dan `GetAnnouncement`; alasan di tabel keputusan |
+| Entity bebas mapping? | Entity hanya berisi nilai bisnis; mapping di data model |
+| DI terpusat; widget tidak membuat repository? | Pemeriksaan import + regex presentation |
+| Hasil verifikasi tersimpan? | Prompt, output awal, keputusan, dan tiga grep pada file ini; hasil test dan screenshot pada README |
+
+## Trade-off dan tanggung jawab mahasiswa
+
+Feature-first lebih banyak file dibanding struktur Week 6, tetapi perubahan sumber
+data tidak mengharuskan widget diubah. `app/data` berisi integrasi HTTP lintas auth
+serta registrasi perangkat; bukan domain bisnis. `core` tetap Dart murni.
+
+Push memakai interface listener Dart agar adapter `ChangeNotifier` hanya di
+presentation. Service masih memakai Flutter/SDK pada data, yang diperbolehkan;
+domain tidak mengetahuinya. Konten pengumuman tetap lokal dan auth tetap mock.
+
+Dokumen ini adalah hasil bantuan AI. Mahasiswa perlu memeriksa trade-off, menentukan
+persetujuan atau revisi sendiri, dan mampu menjelaskan panah dependensi saat demo.
+Dokumen ini tidak mengklaim persetujuan pribadi mahasiswa yang belum diberikan.
 
 ## Hasil Tiga Grep
 
@@ -141,3 +161,5 @@ Use case diuji memakai fake repository tanpa database, HTTP, atau Firebase.
 Test sukses/failure tersedia di
 [get_announcement_test.dart](../test/get_announcement_test.dart) dan
 [login_test.dart](../test/login_test.dart).
+
+Audit project asal dan struktur target ada di [README Minggu 6](../../06-week-6-authentication-security-fcm/README.md#audit-project-lama-untuk-minggu-7-praktikum-1). Hasil akhir dan screenshot ada di [README Minggu 7](../README.md).

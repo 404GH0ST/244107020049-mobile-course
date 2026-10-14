@@ -188,3 +188,10 @@ flutter build apk --debug --no-pub
 Hasil terbaru: **analyzer bersih, 22 test lulus, APK debug berhasil dibangun**.
 Test sukses/failure memakai fake repository; hasil grep ada di [AI Challenge](docs/ai_challenge.md#hasil-tiga-grep).
 
+
+## AI Challenge
+
+[docs/ai_challenge.md](docs/ai_challenge.md) menggabungkan prompt, usulan awal AI,
+pemetaan file, tabel keputusan, alasan teknis, dan hasil tiga grep. Mahasiswa tetap perlu memahami dan menilai keputusan tersebut
+sendiri, sesuai kebijakan AI modul.
+
