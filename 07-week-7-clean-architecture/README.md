@@ -55,32 +55,8 @@ juga memeriksa kedua akses itu. Tidak ditemukan formatting tanggal mentah pada
 widget lama. Instansiasi `AuthRepository()` ada di wiring lama, bukan widget;
 masalahnya ialah kontrak masih berupa implementasi konkret.
 
-Pemetaan **setiap file lama** dan struktur yang dipilih tersedia di
+Struktur target lengkap juga ada pada README project asal. Pemetaan **setiap file lama** tersedia di
 [docs/ai_challenge.md](docs/ai_challenge.md).
-
-## Struktur Target
-
-```text
-lib/
-  core/{failures.dart,format.dart}
-  app/{providers.dart,session_expiry.dart,router.dart,campus_app.dart}
-  app/data/
-  app/presentation/pages/home_page.dart
-  features/auth/{domain,data,presentation}
-  features/announcements/{domain,data,presentation}
-  features/push/{domain,data,presentation}
-```
-
-Auth dan announcements akan memiliki entity, interface repository, implementasi,
-use case dengan aturan bisnis, dan provider Riverpod. Domain tetap Dart murni.
-Home merupakan layar gabungan fitur, sehingga berada di app presentation.
-
-## Status Praktikum 1
-
-Audit, tiga pencarian awal, snapshot, dan struktur target pada README project asal sudah tersedia.
-Domain/data dan presentation masih source Week 6 pada tahap ini; implementasi
-refactor dilakukan pada Praktikum 2 dan 3. Proposal awal disimpan dalam
-[usulan awal AI](docs/ai_challenge.md#usulan-awal-ai) sebelum implementasi.
 
 ## Praktikum 2: Domain dan Data Per Fitur
 
@@ -101,9 +77,6 @@ aturan bisnis tambahan. Tidak membuat wrapper use case per CRUD satu baris.
 Repository mengembalikan record Dart `Result<T> = ({T? value, Failure? failure})`.
 Exception SDK/parsing/storage dipetakan menjadi `Failure` dengan pesan pengguna.
 Mapping berada di model; entity dan domain tidak mengimpor package/framework.
-
-
-Status Praktikum 2: domain/data sudah tersedia dan dipakai oleh presentation pada Praktikum 3.
 
 ## Praktikum 3: Presentation, DI, dan Verifikasi
 
@@ -143,7 +116,7 @@ lib/
     announcements/{domain,data,presentation}
     push/{domain,data,presentation}
 test/
-docs/
+docs/ai_challenge.md
 screenshots/
 ```
 
@@ -163,9 +136,6 @@ rg 'DateFormat|jsonDecode|\.toIso8601String|Repository\(|Dio\(BaseOptions' lib/f
 ```
 
 Hasil grep dan evaluasi arah dependensi disimpan dalam [AI Challenge](docs/ai_challenge.md#hasil-tiga-grep).
-
-
-Test regresi sesi awal tetap dipertahankan; test use case dan failure tambahan menyusul pada tahap testing.
 
 ## Refactoring Challenge dan Testing
 
@@ -188,6 +158,65 @@ flutter build apk --debug --no-pub
 Hasil terbaru: **analyzer bersih, 22 test lulus, APK debug berhasil dibangun**.
 Test sukses/failure memakai fake repository; hasil grep ada di [AI Challenge](docs/ai_challenge.md#hasil-tiga-grep).
 
+## Mini Project: Campus Notify
+
+Fitur tetap: login mock, secure session, logout, simulasi refresh token satu kali,
+daftar/detail pengumuman, izin notifikasi, registrasi perangkat, langganan topik,
+rotasi token, dan deep link FCM.
+
+**Stack:** Flutter/Dart, Riverpod, GoRouter, Dio, Flutter Secure Storage, Firebase
+Core/Messaging, dan local notifications. Dependency mengikuti Week 6; tidak
+menambah SQLite, fitur notes, `get_it`, atau package functional result.
+
+### Menjalankan
+
+```bash
+cd 07-week-7-clean-architecture
+flutter pub get
+flutter devices
+flutter run -d <device-id>
+```
+
+Konfigurasi Firebase lokal (`lib/firebase_options.dart` dan
+`android/app/google-services.json`) diabaikan Git. Pada clone baru, salin konfigurasi
+client project sendiri atau jalankan FlutterFire sebelum analyze/build:
+
+```bash
+flutterfire configure --project=<firebase-project-id> --platforms=android
+```
+
+App ID Android: `id.ac.polinema.campus_notify`. Week 6 dan 7 memakai ID yang sama;
+instalasi ulang dapat mempertahankan sesi. Email demo `demo@kampus.test`, password
+uji minimal enam karakter. Auth, pengumuman, dan registrasi perangkat memakai
+simulasi; pengiriman FCM memakai Firebase nyata.
+
+## Screenshot Before/After
+
+| Alur | Week 6 sebelum refactor | Week 7 setelah refactor |
+| --- | --- | --- |
+| Login | ![Login before](screenshots/before_auth_login.png) | ![Login after](screenshots/after_auth_login.png) |
+| Home, daftar dan push | ![Home before](screenshots/before_announcements_home.png) | ![Home after](screenshots/after_announcements_home.png) |
+| Detail pengumuman | ![Detail before](screenshots/before_announcement_detail.png) | ![Detail after](screenshots/after_announcement_detail.png) |
+| Refresh sesi | ![Refresh before](screenshots/before_auth_refresh.png) | ![Refresh after](screenshots/after_auth_refresh.png) |
+| Refresh gagal → login | ![Sesi berakhir before](screenshots/before_auth_session_expired.png) | ![Sesi berakhir after](screenshots/after_auth_session_expired.png) |
+
+Screenshot diambil dari framebuffer emulator Android dengan `adb exec-out screencap -p`.
+Seluruh 18 screenshot diambil ulang pada 14 Oktober 2026. Jam, token tersamarkan,
+dan urutan log Firebase dapat berbeda; konten dan alur aplikasi dipertahankan.
+
+## Verifikasi Emulator dan FCM
+
+| Alur | Hasil | Screenshot |
+| --- | --- | --- |
+| Form kosong | Validasi email dan minimal enam karakter | [Validasi](screenshots/after_auth_validation.png) |
+| Restore setelah restart | Kembali ke Home tanpa login ulang | [Home](screenshots/after_announcements_home.png) |
+| Foreground | Banner lokal; tap menuju pengumuman #3 | [Notifikasi](screenshots/after_push_foreground.png), [detail](screenshots/after_push_foreground_detail.png) |
+| Background | Callback background; tap menuju pengumuman #3 | [Notifikasi](screenshots/after_push_background.png), [detail](screenshots/after_push_background_detail.png) |
+| Terminated | Initial message; tap menuju pengumuman #3 | [Notifikasi](screenshots/after_push_terminated.png), [detail](screenshots/after_push_terminated_detail.png) |
+| Rotasi token | Token berubah dan registrasi ulang berhasil | [Rotasi](screenshots/after_push_token_rotation.png) |
+
+Pengiriman FCM ditujukan hanya ke emulator pengujian dan menerima HTTP 200 pada
+ketiga kondisi. Auth, pengumuman, dan registrasi perangkat tetap simulasi.
 
 ## AI Challenge
 
@@ -195,3 +224,32 @@ Test sukses/failure memakai fake repository; hasil grep ada di [AI Challenge](do
 pemetaan file, tabel keputusan, alasan teknis, dan hasil tiga grep. Mahasiswa tetap perlu memahami dan menilai keputusan tersebut
 sendiri, sesuai kebijakan AI modul.
 
+## Refleksi
+
+1. **Mengapa interface di domain?** Domain menentukan kebutuhan bisnis. Jika
+   interface berada di data, domain ikut bergantung pada layer luar. Kontrak di
+   domain memungkinkan implementasi asli dan fake diganti tanpa mengubah use case.
+2. **Kapan use case diperlukan?** Saat ada validasi, aturan bisnis, atau rangkaian
+   operasi. Login mengurutkan autentikasi dan simpan sesi. Fetch daftar sederhana
+   cukup langsung repository→provider.
+3. **Biaya over-engineering?** Wrapper satu baris menambah file, wiring, dan biaya
+   perubahan tanpa aturan baru. Use case sepadan saat aturan kompleks, dipakai
+   beberapa layar, atau menggabungkan beberapa repository.
+4. **Usulan yang disederhanakan?** Tidak membuat use case untuk setiap CRUD atau
+   memecah setiap callback FCM. Riverpod yang ada dan record Dart sudah cukup.
+
+## Checklist Verifikasi
+
+- [x] Snapshot sebelum refactor dan audit pada README project asal Minggu 6.
+- [x] Auth dan announcements memiliki entity, interface, impl, use case, dan provider.
+- [x] Presentation bebas SDK/parsing; domain/core Dart murni; tiga grep nol hasil.
+- [x] Analyzer bersih, 22 test lulus, APK debug berhasil dibangun.
+- [x] Screenshot before/after dan FCM foreground/background/terminated diverifikasi.
+- [x] Prompt, output awal, keputusan, trade-off, dan hasil grep tersimpan dalam satu `docs/ai_challenge.md`.
+
+## Referensi
+
+- [Modul Minggu 7](https://jti-polinema.github.io/flutter-codelab/07-minggu-7-clean-architecture/index.html#0)
+- [Flutter App Architecture](https://docs.flutter.dev/app-architecture)
+- [Riverpod: provider overrides](https://riverpod.dev/docs/concepts2/overrides)
+- [Riverpod: testing](https://riverpod.dev/docs/how_to/testing)
