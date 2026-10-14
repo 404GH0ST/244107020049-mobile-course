@@ -106,3 +106,30 @@ pages/home_page.dart:28:          .read(apiClientProvider)
 pages/home_page.dart:31:            options: Options(extra: {'expireAccess': true}),
 pages/home_page.dart:35:          () => _result = result.data?['message'] as String? ?? 'Sukses',
 ```
+
+## Hasil Tiga Grep
+
+Dijalankan pada 14 Oktober 2026 dari folder Minggu 7. Folder lama `lib/pages`
+sudah dipindahkan; target pencarian adalah folder presentation yang aktual.
+
+### Presentation: SDK dan parsing mentah
+
+```bash
+rg 'Dio\(|http\.|openDatabase|getDatabasesPath|FlutterSecureStorage|SharedPreferences\.getInstance|jsonDecode' lib/features/*/presentation lib/app/presentation
+# nol hasil; exit 1
+```
+
+### Domain/core: package framework
+
+```bash
+rg "(?:import|export) ['\"]package:" lib/features/*/domain lib/core
+# nol hasil; exit 1
+```
+
+### Presentation: formatting dan instansiasi
+
+```bash
+rg 'DateFormat|jsonDecode|\.toIso8601String|Repository\(|Dio\(BaseOptions' lib/features/*/presentation lib/app/presentation
+# nol hasil; exit 1
+```
+

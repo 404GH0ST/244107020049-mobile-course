@@ -103,4 +103,66 @@ Exception SDK/parsing/storage dipetakan menjadi `Failure` dengan pesan pengguna.
 Mapping berada di model; entity dan domain tidak mengimpor package/framework.
 
 
-Status: domain/data baru tersedia; widget dan provider lama akan dialihkan pada Praktikum 3.
+Status Praktikum 2: domain/data sudah tersedia dan dipakai oleh presentation pada Praktikum 3.
+
+## Praktikum 3: Presentation, DI, dan Verifikasi
+
+```mermaid
+flowchart TB
+    P[Presentation: widget dan notifier] --> D[Domain: entity, interface, use case]
+    DATA[Data: model, source, repository impl, SDK] --> D
+    ROOT[app/providers.dart: wiring Riverpod] --> DATA
+    ROOT --> D
+    P --> ROOT
+```
+
+Panah menunjukkan import/dependensi kode. Domain tidak mengetahui Flutter, Dio,
+SQLite, atau Firebase. Composition root boleh mengetahui implementasi data untuk
+menyuntikkan kontrak. Widget memperoleh state/provider; tidak membuat repository.
+
+Wiring implementasi terpusat di `app/providers.dart`. Sinyal expiry di
+`app/session_expiry.dart` memutus siklus wiring→notifier auth→wiring. Home berada di
+app presentation karena menggabungkan tiga fitur; halaman fitur tidak saling
+mengimpor presentation fitur lain. Router berada di `app/router.dart`, konstanta
+rute tetap di `routes.dart`, dan `main.dart` hanya bootstrap.
+
+```text
+lib/
+  main.dart
+  routes.dart
+  core/{failures.dart,format.dart}       # Dart murni
+  app/
+    providers.dart                     # DI implementasi
+    session_expiry.dart                # Bridge callback sesi
+    router.dart
+    campus_app.dart
+    data/                              # Integrasi HTTP lintas fitur
+    presentation/pages/home_page.dart
+  features/
+    auth/{domain,data,presentation}
+    announcements/{domain,data,presentation}
+    push/{domain,data,presentation}
+test/
+docs/
+screenshots/
+```
+
+### Hasil Tiga Pencarian Sterilitas
+
+Dari folder Week 7; `lib/pages` lama sudah dipindahkan.
+
+```bash
+rg 'Dio\(|http\.|openDatabase|getDatabasesPath|FlutterSecureStorage|SharedPreferences\.getInstance|jsonDecode' lib/features/*/presentation lib/app/presentation
+# nol hasil, exit 1
+
+rg "(?:import|export) ['\"]package:" lib/features/*/domain lib/core
+# nol hasil, exit 1; lebih ketat daripada larangan package tertentu pada modul
+
+rg 'DateFormat|jsonDecode|\.toIso8601String|Repository\(|Dio\(BaseOptions' lib/features/*/presentation lib/app/presentation
+# nol hasil, exit 1
+```
+
+Hasil grep dan evaluasi arah dependensi disimpan dalam [AI Challenge](docs/ai_challenge.md#hasil-tiga-grep).
+
+
+Test regresi sesi awal tetap dipertahankan; test use case dan failure tambahan menyusul pada tahap testing.

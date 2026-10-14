@@ -1,32 +1,16 @@
-import 'package:campus_notify/data/api_client.dart';
-import 'package:campus_notify/data/auth_repository.dart';
-import 'package:campus_notify/data/mock_campus_adapter.dart';
-import 'package:campus_notify/data/token_store.dart';
-import 'package:campus_notify/providers/auth_provider.dart';
+import 'package:campus_notify/app/data/api_client.dart';
+import 'package:campus_notify/features/auth/data/sources/mock_auth_source.dart';
+import 'package:campus_notify/app/data/mock_campus_adapter.dart';
+import 'package:campus_notify/features/auth/presentation/providers/auth_provider.dart';
 import 'package:campus_notify/routes.dart';
+import 'package:campus_notify/core/format.dart';
+import 'package:campus_notify/core/failures.dart';
+import 'package:campus_notify/app/providers.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-class FakeTokenStore extends TokenStore {
-  String? access;
-  String? refresh;
-  @override
-  Future<String?> readAccess() async => access;
-  @override
-  Future<String?> readRefresh() async => refresh;
-  @override
-  Future<void> save({required String access, required String refresh}) async {
-    this.access = access;
-    this.refresh = refresh;
-  }
-
-  @override
-  Future<void> clear() async {
-    access = null;
-    refresh = null;
-  }
-}
+import 'fake_token_store.dart';
 
 void main() {
   test('routeFromMessage menangani route kosong dan tanpa slash', () {
@@ -70,7 +54,7 @@ void main() {
       var expired = false;
       final dio = buildApiClient(
         store,
-        AuthRepository(),
+        MockAuthSource(),
         onSessionExpired: () async {
           expired = true;
         },
@@ -96,6 +80,27 @@ void main() {
       expect(expired, isTrue);
       expect(await store.readAccess(), isNull);
       expect(await store.readRefresh(), isNull);
+    },
+  );
+  test(
+    'DI refresh gagal membersihkan sesi dan memperbarui auth state',
+    () async {
+      final store = FakeTokenStore();
+      await store.save(access: 'mock-access', refresh: 'mock-refresh-for-demo');
+      final container = ProviderContainer(
+        overrides: [tokenStoreProvider.overrideWithValue(store)],
+      );
+      addTearDown(container.dispose);
+      expect(await container.read(authStateProvider.future), isTrue);
+      final repository = container.read(authRepositoryProvider);
+      final success = await repository.demoRefresh(failRefresh: false);
+      expect(success.failure, isNull);
+      expect(success.value, '401 → refresh sekali → retry 200');
+      final failure = await repository.demoRefresh(failRefresh: true);
+      expect(failure.failure, isA<SessionFailure>());
+      expect(container.read(authStateProvider).value, isFalse);
+      expect(store.access, isNull);
+      expect(store.refresh, isNull);
     },
   );
 }
