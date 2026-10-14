@@ -133,3 +133,11 @@ rg 'DateFormat|jsonDecode|\.toIso8601String|Repository\(|Dio\(BaseOptions' lib/f
 # nol hasil; exit 1
 ```
 
+## Pengujian
+
+`flutter analyze --no-pub`: **No issues found**, exit 0.
+`flutter test --no-pub --reporter expanded`: **22 test lulus**, exit 0.
+Use case diuji memakai fake repository tanpa database, HTTP, atau Firebase.
+Test sukses/failure tersedia di
+[get_announcement_test.dart](../test/get_announcement_test.dart) dan
+[login_test.dart](../test/login_test.dart).

@@ -166,3 +166,25 @@ Hasil grep dan evaluasi arah dependensi disimpan dalam [AI Challenge](docs/ai_ch
 
 
 Test regresi sesi awal tetap dipertahankan; test use case dan failure tambahan menyusul pada tahap testing.
+
+## Refactoring Challenge dan Testing
+
+Pola lengkap diterapkan pada **dua fitur: auth dan announcements**. Push ikut
+memisahkan kontrak Dart, service SDK, dan adapter UI. Parsing rute serta formatting
+tanggal diekstrak ke `core/format.dart`; tanggal tidak ditambahkan ke UI karena
+Week 6 tidak menampilkannya.
+
+Test domain memakai fake repository tanpa Dio, SQLite, secure storage native,
+atau Firebase. Test data/provider terpisah memeriksa mapping failure, token parsial,
+interceptor, dan DI. Test widget memeriksa pesan error/retry dan redirect deep link
+melalui login menuju pengumuman yang diminta.
+
+```bash
+flutter analyze --no-pub
+flutter test --no-pub --reporter expanded
+flutter build apk --debug --no-pub
+```
+
+Hasil terbaru: **analyzer bersih, 22 test lulus, APK debug berhasil dibangun**.
+Test sukses/failure memakai fake repository; hasil grep ada di [AI Challenge](docs/ai_challenge.md#hasil-tiga-grep).
+
