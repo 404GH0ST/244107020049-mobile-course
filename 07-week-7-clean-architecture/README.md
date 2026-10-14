@@ -81,3 +81,26 @@ Audit, tiga pencarian awal, snapshot, dan struktur target pada README project as
 Domain/data dan presentation masih source Week 6 pada tahap ini; implementasi
 refactor dilakukan pada Praktikum 2 dan 3. Proposal awal disimpan dalam
 [usulan awal AI](docs/ai_challenge.md#usulan-awal-ai) sebelum implementasi.
+
+## Praktikum 2: Domain dan Data Per Fitur
+
+| Peran | Auth | Announcements |
+| --- | --- | --- |
+| Entity murni | `AuthSession` | `Announcement` |
+| Interface di domain | `AuthRepository` | `AnnouncementRepository` |
+| Model di data | `AuthSessionModel.toEntity` | `AnnouncementModel.fromJson/toEntity` |
+| Source di data | Mock auth dan secure token store | Konten contoh Week 6 |
+| Implementasi di data | `AuthRepositoryImpl` | `AnnouncementRepositoryImpl` |
+| Use case di domain | `Login` | `GetAnnouncement` |
+
+`Login` memvalidasi input, menormalisasi email, lalu menyimpan sesi setelah login
+berhasil. `GetAnnouncement` memvalidasi ID sebelum mengakses repository. Fetch
+daftar, restore sesi, dan logout memakai repository langsung karena belum punya
+aturan bisnis tambahan. Tidak membuat wrapper use case per CRUD satu baris.
+
+Repository mengembalikan record Dart `Result<T> = ({T? value, Failure? failure})`.
+Exception SDK/parsing/storage dipetakan menjadi `Failure` dengan pesan pengguna.
+Mapping berada di model; entity dan domain tidak mengimpor package/framework.
+
+
+Status: domain/data baru tersedia; widget dan provider lama akan dialihkan pada Praktikum 3.
