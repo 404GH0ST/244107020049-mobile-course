@@ -252,6 +252,146 @@ Parsing rute dipisahkan dari Firebase agar dapat diuji, error API dipetakan agar
 
 ---
 
+## Audit Project Lama untuk Minggu 7 (Praktikum 1)
+
+Audit ini mengikuti [Praktikum 1 Clean Architecture](https://jti-polinema.github.io/flutter-codelab/07-minggu-7-clean-architecture/index.html#2).
+Project asal yang diperiksa adalah Campus Notify Minggu 6. Source di folder ini
+tetap menjadi pembanding; refactor diterapkan pada
+[project Minggu 7](../07-week-7-clean-architecture/README.md).
+
+### Pemetaan File ke Layer
+
+| File awal di `lib/` | Layer saat ini | Masalah / tindakan refactor |
+| --- | --- | --- |
+| `pages/home_page.dart` | Presentation + data | Membaca token, memanggil API dan parsing response di widget; pindahkan ke repository/notifier |
+| `data/api_client.dart` | Data | Interceptor sudah di data, tetapi masih diakses widget; gunakan melalui repository |
+| `providers/auth_provider.dart` | Presentation + wiring + storage | Membaca/menulis token langsung; pindahkan storage ke data dan wiring ke provider terpusat |
+| `data/auth_repository.dart` | Data + entity/kontrak | Entity dan implementasi mock bercampur; pisahkan entity, interface, model, source, dan impl |
+| `pages/announcement_page.dart` | Presentation + konten | Data contoh tertanam di widget; pindahkan ke source/model, kembalikan entity |
+| `messaging/push_service.dart` | Data + lifecycle | Pisahkan kontrak push dan repository registrasi perangkat dari SDK Firebase |
+| `providers/push_provider.dart` | Wiring + state | Implementasi disuntikkan terpusat; presentation memakai kontrak/adapter |
+| `routes.dart` | Konstanta rute + parser | Ekstrak parser murni ke `core/format.dart`; pertahankan konstanta rute |
+
+### Tiga Pencarian Pelanggaran
+
+Dijalankan pada source Minggu 6. Folder `lib/widgets` tidak ada, sehingga pencarian
+widget hanya memakai `lib/pages`.
+
+```bash
+rg 'Dio\(|http\.|openDatabase|SharedPreferences\.getInstance|FlutterSecureStorage' lib/pages
+# nol hasil, exit 1
+
+rg 'DateFormat|jsonDecode|\.toIso8601String' lib/pages
+# nol hasil, exit 1
+
+rg 'Repository\(|Dio\(BaseOptions' lib/pages lib/providers
+# providers/auth_provider.dart:9:final authRepositoryProvider = Provider((ref) => AuthRepository());
+# exit 0
+```
+
+Instansiasi repository di provider merupakan wiring DI; temuan ini menunjukkan
+bahwa kontraknya masih kelas konkret, bukan bukti widget menginstansiasi repository.
+Regex SDK literal juga belum menangkap akses melalui provider. Pemeriksaan tambahan
+menemukan `tokenStoreProvider`, `apiClientProvider`, `Options`, dan
+`result.data` di Home, serta akses token langsung pada notifier auth. Akses
+tersebut menjadi item refactor. Formatting tanggal mentah tidak ditemukan.
+
+### Struktur Target Feature-first
+
+Struktur berikut adalah **target refactor untuk Minggu 7**, bukan struktur source
+Minggu 6 yang sedang berjalan.
+
+```text
+lib/
+├── app/
+│   ├── data/
+│   │   ├── api_client.dart
+│   │   ├── failure_mapper.dart
+│   │   └── mock_campus_adapter.dart
+│   ├── presentation/
+│   │   └── pages/
+│   │       └── home_page.dart
+│   ├── campus_app.dart
+│   ├── providers.dart
+│   ├── router.dart
+│   └── session_expiry.dart
+├── core/
+│   ├── failures.dart
+│   └── format.dart
+├── features/
+│   ├── announcements/
+│   │   ├── data/
+│   │   │   ├── models/
+│   │   │   │   └── announcement_model.dart
+│   │   │   ├── repositories/
+│   │   │   │   └── announcement_repository_impl.dart
+│   │   │   └── sources/
+│   │   │       └── announcement_source.dart
+│   │   ├── domain/
+│   │   │   ├── entities/
+│   │   │   │   └── announcement.dart
+│   │   │   ├── repositories/
+│   │   │   │   └── announcement_repository.dart
+│   │   │   └── usecases/
+│   │   │       └── get_announcement.dart
+│   │   └── presentation/
+│   │       ├── pages/
+│   │       │   └── announcement_page.dart
+│   │       └── providers/
+│   │           └── announcement_providers.dart
+│   ├── auth/
+│   │   ├── data/
+│   │   │   ├── models/
+│   │   │   │   └── auth_session_model.dart
+│   │   │   ├── repositories/
+│   │   │   │   └── auth_repository_impl.dart
+│   │   │   └── sources/
+│   │   │       ├── mock_auth_source.dart
+│   │   │       └── token_store.dart
+│   │   ├── domain/
+│   │   │   ├── entities/
+│   │   │   │   └── auth_session.dart
+│   │   │   ├── repositories/
+│   │   │   │   └── auth_repository.dart
+│   │   │   └── usecases/
+│   │   │       └── login.dart
+│   │   └── presentation/
+│   │       ├── pages/
+│   │       │   └── login_page.dart
+│   │       └── providers/
+│   │           └── auth_provider.dart
+│   └── push/
+│       ├── data/
+│       │   ├── repositories/
+│       │   │   └── device_repository_impl.dart
+│       │   └── services/
+│       │       └── push_service.dart
+│       ├── domain/
+│       │   └── repositories/
+│       │       ├── device_repository.dart
+│       │       └── push_repository.dart
+│       └── presentation/
+│           └── providers/
+│               └── push_provider.dart
+├── main.dart
+└── routes.dart
+```
+
+Domain berisi entity, kontrak repository, dan use case Dart murni. Data menyediakan
+model, source, dan implementasi. Presentation berisi provider state dan halaman.
+`app/providers.dart` menjadi wiring Riverpod, sementara Home berada di
+`app/presentation` karena menggabungkan auth, pengumuman, dan push.
+
+Arah dependensi: `presentation → domain ← data`. Target setelah Praktikum 3:
+presentation bebas akses SDK/parsing mentah, domain bebas framework, dan semua
+verifikasi sterilitas nol hasil.
+
+Snapshot sebelum refactor disimpan pada `6d1b4f7`. Tidak membuat project Flutter
+baru atau fitur baru. Prompt, usulan AI, keputusan, dan hasil verifikasi akhir
+digabungkan dalam [AI Challenge Minggu 7](../07-week-7-clean-architecture/docs/ai_challenge.md).
+
+---
+
 ## Referensi
 
 - [Codelab Minggu 6](https://jti-polinema.github.io/flutter-codelab/06-minggu-6-authentication-security-fcm/index.html)
