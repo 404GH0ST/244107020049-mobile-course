@@ -15,12 +15,12 @@ pada **21 Oktober 2026, 22.05.38 WIB** (15.05.38 UTC), oleh **404GH0ST**.
 ## Verifikasi repository
 
 ```sh
-rtk git fetch origin
-rtk git merge-base --is-ancestor daceea370c2c9e3623f5517b6d3c9cf8afda1bf1 origin/main
+git fetch origin
+git merge-base --is-ancestor daceea370c2c9e3623f5517b6d3c9cf8afda1bf1 origin/main
 # exit 0
-rtk git diff --stat be6a67ae679bc3ffd7f404c4f369225f040cecb4 origin/main
+git diff --stat be6a67ae679bc3ffd7f404c4f369225f040cecb4 origin/main
 # kosong
-rtk git ls-remote origin refs/heads/main
+git ls-remote origin refs/heads/main
 # daceea370c2c9e3623f5517b6d3c9cf8afda1bf1 refs/heads/main
 ```
 

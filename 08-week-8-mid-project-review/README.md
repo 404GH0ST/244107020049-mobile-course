@@ -100,9 +100,9 @@ Commit dipisahkan menurut tanggung jawab implementasi, pengujian, dan CI.
 Dari `07-week-7-clean-architecture/`:
 
 ```sh
-rtk proxy dart format --output=none --set-exit-if-changed lib test
-rtk proxy flutter analyze --no-pub
-rtk proxy flutter test --no-pub
+dart format --output=none --set-exit-if-changed lib test
+flutter analyze --no-pub
+flutter test --no-pub
 ```
 
 Hasil: **44 file / 0 berubah, No issues found, 22 tes lulus**.
@@ -113,11 +113,11 @@ dan [tiga pencarian dependency](docs/evidence/campus-dependencies.txt).
 Dari `PBL-MOBILE/App/Mobile/`:
 
 ```sh
-rtk proxy flutter pub get
-rtk proxy dart format --output=none --set-exit-if-changed lib test
-rtk proxy flutter analyze --no-pub
-rtk proxy flutter test --no-pub
-rtk proxy flutter build apk --debug --no-pub --target-platform android-arm64
+flutter pub get
+dart format --output=none --set-exit-if-changed lib test
+flutter analyze --no-pub
+flutter test --no-pub
+flutter build apk --debug --no-pub --target-platform android-arm64
 ```
 
 Hasil format/analyze/test: **140 file / 0 berubah, No issues found, 185 tes lulus**.
@@ -142,9 +142,9 @@ sampai maintainer menetapkannya sebagai required check.
 
 ```sh
 cd 07-week-7-clean-architecture
-rtk proxy flutter pub get
-rtk proxy flutter devices
-rtk proxy flutter run -d <device-id>
+flutter pub get
+flutter devices
+flutter run -d <device-id>
 ```
 
 Konfigurasi Firebase lokal tetap mengikuti
@@ -161,9 +161,9 @@ git clone git@github.com:Zuhdiaja/PBL-MOBILE.git
 cd PBL-MOBILE
 git switch main
 cd App/Mobile
-rtk proxy flutter pub get
-rtk proxy flutter emulators --launch Pixel_10
-rtk proxy flutter run -d emulator-5554
+flutter pub get
+flutter emulators --launch Pixel_10
+flutter run -d emulator-5554
 ```
 
 ID AVD/perangkat disesuaikan dengan mesin reviewer. Proyek memakai Flutter

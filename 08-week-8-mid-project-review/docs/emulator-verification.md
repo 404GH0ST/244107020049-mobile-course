@@ -64,17 +64,17 @@ untuk tiga aset ilustrasi yang kemudian dibundel dan ditampilkan oleh Flutter.
 ## Mengulang pengujian
 
 ```sh
-rtk proxy flutter build apk --debug --no-pub --target-platform android-arm64
-rtk proxy adb -s emulator-5554 install -r build/app/outputs/flutter-apk/app-debug.apk
-rtk proxy adb -s emulator-5554 shell am start -W -n com.example.pbl_semester5/.MainActivity
-rtk proxy adb -s emulator-5554 exec-out screencap -p > onboarding.png
-rtk proxy adb -s emulator-5554 shell cmd uimode night yes
-rtk proxy adb -s emulator-5554 shell wm size 840x1470
-rtk proxy adb -s emulator-5554 shell settings put system font_scale 1.3
+flutter build apk --debug --no-pub --target-platform android-arm64
+adb -s emulator-5554 install -r build/app/outputs/flutter-apk/app-debug.apk
+adb -s emulator-5554 shell am start -W -n com.example.pbl_semester5/.MainActivity
+adb -s emulator-5554 exec-out screencap -p > onboarding.png
+adb -s emulator-5554 shell cmd uimode night yes
+adb -s emulator-5554 shell wm size 840x1470
+adb -s emulator-5554 shell settings put system font_scale 1.3
 # Uji navigasi dan scroll, lalu pulihkan:
-rtk proxy adb -s emulator-5554 shell wm size reset
-rtk proxy adb -s emulator-5554 shell settings put system font_scale 1.0
-rtk proxy adb -s emulator-5554 shell cmd uimode night no
+adb -s emulator-5554 shell wm size reset
+adb -s emulator-5554 shell settings put system font_scale 1.0
+adb -s emulator-5554 shell cmd uimode night no
 ```
 
 ## Batas bukti
