@@ -28,7 +28,7 @@ PR PBL bersifat privat; dosen/reviewer memerlukan akses repository kelompok.
 | Kolaborasi | Issue dan PR ke main tersedia; CI otomatis; review sejawat/approve/merge menunggu anggota tim |
 
 **Belum menyatakan seluruh definisi selesai Minggu 8 terpenuhi.** Review AI dan
-pengujian lokal tidak menggantikan minimal tiga komentar sejawat, tindak lanjut,
+pengujian lokal tidak menggantikan minimal satu review sejawat, tindak lanjut bila ada,
 approval, serta merge melalui review yang diminta modul.
 
 ## Fitur utama dan stack

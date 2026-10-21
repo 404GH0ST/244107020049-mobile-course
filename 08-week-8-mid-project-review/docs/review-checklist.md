@@ -39,13 +39,15 @@ mengubah kebijakan integrasi tim.
 
 Checklist reviewer manusia yang masih harus dikerjakan berpasangan:
 
-- [ ] Checkout branch dan jalankan analyze/test.
-- [ ] Dua temuan kebenaran: state/error path/edge case; sertakan reproduksi.
-- [ ] Satu temuan arsitektur: arah import atau kepemilikan dependency.
-- [ ] Satu temuan tes dan satu saran keterbacaan.
-- [ ] Minimal tiga komentar bermakna ditindaklanjuti author.
-- [ ] Request changes diselesaikan, lalu re-review hingga approve.
-- [ ] Merge melalui reviewer; issue ditutup otomatis dan branch dihapus setelah merge.
+Sesuai arahan pemilik, cukup **minimal satu review sejawat** pada PR.
+Jumlah temuan atau komentar tidak dipatok; reviewer menilai perubahan secara
+bermakna dan hanya melaporkan masalah yang benar-benar ditemukan.
+
+- [ ] Reviewer checkout branch dan menjalankan analyze/test.
+- [ ] Minimal satu review sejawat memeriksa perilaku, arsitektur, dan kecukupan tes.
+- [ ] Author menindaklanjuti masukan yang ada; bila tidak ada masalah, catat hasil review.
+- [ ] Jika berstatus request changes, selesaikan masukan lalu minta re-review hingga approve.
+- [ ] Merge setelah approval; issue ditutup otomatis dan branch dihapus setelah merge.
 
 Format komentar: **observasi → dampak → usulan konkret**.
 Contoh bahan diskusi, bukan komentar yang sudah dikirim:
@@ -101,7 +103,7 @@ pertahankan UI + tes sebagai unit perilaku yang bisa dijalankan.
 - [x] Review AI, dua bukti benar, dan satu saran ditolak dengan alasan.
 - [x] Laporan disusun di folder 08-week-8-mid-project-review/.
 - [x] APK debug ARM64, pemeriksaan emulator, dan screenshot asli selesai.
-- [ ] Review sejawat, minimal tiga tindak lanjut, approve, dan merge.
+- [ ] Minimal satu review sejawat, tindak lanjut bila ada, approve, dan merge.
 - [ ] Persetujuan reviewer atas pengecualian ukuran diff.
 
 Project siap diajukan review; **seluruh definisi selesai kolaborasi Minggu 8 belum
