@@ -13,7 +13,7 @@ dan `campus-status.txt`.
 | Temuan | Tindak lanjut |
 | --- | --- |
 | Portfolio hanya memiliki remote main; commit Minggu 7 berada di main | Membuat develop dari origin/main dan branch docs/week-8-mid-project-review, tanpa menulis ulang riwayat yang sudah dipublikasikan |
-| PBL memakai feat/* → main; develop belum tersedia | Membuat develop pada basis e9bb183, lalu feature/onboarding-visuals → develop |
+| PBL memakai feat/* → main; develop belum tersedia | Sempat membuat develop pada basis e9bb183; target akhir feature/onboarding-visuals → main sesuai koreksi pemilik |
 | PBL memiliki file PDF/output lokal yang tidak terkait | Menggunakan worktree terpisah; file asli tidak dihapus, di-stage, atau di-commit |
 | Ada branch lama fitur anggota lain | Hanya dicatat; usia author commit bukan bukti usia branch. Tidak menghapus branch milik anggota lain |
 | Baseline 15 pesan terakhir portfolio sudah Conventional Commits | Tidak mengarang tiga pesan buruk; simulasi di bawah menggunakan tiga pesan nyata yang masih dapat diperjelas |
@@ -32,7 +32,10 @@ Simulasi saja: tidak melakukan rebase/amend/force-push pada main.
 
 Issue kelompok: [#12](https://github.com/Zuhdiaja/PBL-MOBILE/issues/12).
 PR fitur: [#13](https://github.com/Zuhdiaja/PBL-MOBILE/pull/13).
-Basis branch: develop, satu fitur onboarding.
+Basis awal branch: develop pada e9bb183, identik dengan main ketika dibuat.
+**Target PR akhir: main**, sesuai arahan pemilik dan alur repository kelompok.
+Model develop pada codelab tetap menjadi bahan pembelajaran, bukan kewajiban
+mengubah kebijakan integrasi tim.
 
 Checklist reviewer manusia yang masih harus dikerjakan berpasangan:
 
@@ -93,7 +96,7 @@ pertahankan UI + tes sebagai unit perilaku yang bisa dijalankan.
 
 ## Definisi selesai
 
-- [x] Implementasi satu fitur, branch kerja dari develop, issue dan PR terhubung.
+- [x] Implementasi satu fitur, issue dan PR terhubung; target main sesuai arahan pemilik.
 - [x] Audit pribadi Minggu 7 dan bukti mesin dijalankan ulang.
 - [x] Review AI, dua bukti benar, dan satu saran ditolak dengan alasan.
 - [x] Laporan disusun di folder 08-week-8-mid-project-review/.

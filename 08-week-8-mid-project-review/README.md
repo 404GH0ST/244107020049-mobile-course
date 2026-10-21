@@ -25,7 +25,7 @@ PR PBL bersifat privat; dosen/reviewer memerlukan akses repository kelompok.
 | --- | --- |
 | Campus Notify Minggu 7 | Kode aplikasi dipertahankan; format 44 file bersih, analyzer bersih, 22 tes lulus; tiga pencarian sterilitas menghasilkan 0 kecocokan |
 | LinkGuard | Pembaruan onboarding tiga langkah, ilustrasi original besar, bahasa Indonesia, navigasi geser dan Back Android; format 140 file bersih, analyzer bersih, 185 tes lulus |
-| Kolaborasi | Issue dan PR ke develop tersedia; CI otomatis; review sejawat/approve/merge menunggu anggota tim |
+| Kolaborasi | Issue dan PR ke main tersedia; CI otomatis; review sejawat/approve/merge menunggu anggota tim |
 
 **Belum menyatakan seluruh definisi selesai Minggu 8 terpenuhi.** Review AI dan
 pengujian lokal tidak menggantikan minimal tiga komentar sejawat, tindak lanjut,
@@ -50,8 +50,8 @@ sesi sesuai launch gate lama; persistensi tidak ditambahkan.
 | Artefak | Tujuan |
 | --- | --- |
 | [Issue PBL #12](https://github.com/Zuhdiaja/PBL-MOBILE/issues/12) | Ilustrasi kecil, label Next pada layar sempit, dan Back Android |
-| develop pada PBL | Dibuat dari main e9bb183 sebagai basis integrasi |
-| feature/onboarding-visuals | Satu fitur onboarding; develop sebagai target PR |
+| develop pada PBL | Sempat dibuat dari main e9bb183; bukan target PR akhir |
+| feature/onboarding-visuals | Satu fitur onboarding; main sebagai target PR sesuai arahan pemilik |
 | c4e3bb4 | Implementasi ilustrasi dan navigasi bahasa Indonesia |
 | eddbe07 | Tes perilaku onboarding |
 | be6a67a | CI formatter, analyzer, test pada main/develop |
@@ -59,8 +59,9 @@ sesi sesuai launch gate lama; persistensi tidak ditambahkan.
 | docs/week-8-mid-project-review pada portfolio | Laporan, log verifikasi, dan screenshot; tidak mengubah kode akhir Minggu 7 |
 
 Tidak mengubah default branch atau aturan proteksi repository kelompok secara
-sepihak. develop dipakai sebagai target PR tugas ini. Migrasi kebijakan tim
-untuk semua PR berikutnya perlu persetujuan pengelola.
+sepihak. PR tugas ini menargetkan **main**, mengikuti alur repository kelompok
+dan koreksi pemilik. Model develop pada codelab dicatat sebagai referensi
+pembelajaran, bukan perubahan kebijakan tim secara sepihak.
 
 ## Praktikum 1: Audit riwayat dan branching
 
