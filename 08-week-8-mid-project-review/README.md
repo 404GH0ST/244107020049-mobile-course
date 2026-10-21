@@ -14,7 +14,7 @@ sesuai tugas dua tautan Classroom.
 1. **PR fitur kelompok:** [Zuhdiaja/PBL-MOBILE #13](https://github.com/Zuhdiaja/PBL-MOBILE/pull/13).
 2. **Commit laporan pribadi:** gunakan tautan commit yang menambahkan folder
    `08-week-8-mid-project-review/` ini pada repository
-   [244107020049-mobile-course](https://github.com/404GH0ST/244107020049-mobile-course/commits/docs/week-8-mid-project-review/08-week-8-mid-project-review).
+   [244107020049-mobile-course](https://github.com/404GH0ST/244107020049-mobile-course/commits/main/08-week-8-mid-project-review).
    Tautan commit spesifik diserahkan bersama PR pada Classroom.
 
 PR PBL bersifat privat; dosen/reviewer memerlukan akses repository kelompok.
@@ -159,7 +159,7 @@ pada Campus Notify.
 ```sh
 git clone git@github.com:Zuhdiaja/PBL-MOBILE.git
 cd PBL-MOBILE
-git switch feature/onboarding-visuals
+git switch main
 cd App/Mobile
 rtk proxy flutter pub get
 rtk proxy flutter emulators --launch Pixel_10
