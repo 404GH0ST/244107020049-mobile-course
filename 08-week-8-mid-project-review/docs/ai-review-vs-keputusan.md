@@ -81,7 +81,8 @@ Widget tidak mengimpor data layer dan tidak membuat repository konkret.
   dijalankan ulang dan dilampirkan secara terpisah.
 - Pembaruan: oninonins sudah memberi Approve pada head PR. Masukan verifikasi
   ditindaklanjuti; lihat [review sejawat](peer-review.md). Tidak ada self-approval
-  atau klaim merge; PR masih terbuka.
+  atau klaim merge tanpa bukti. Pembaruan berikutnya: PR telah merged ke main;
+  lihat [verifikasi merge](merge-verification.md).
 
 ## Referensi API yang diperiksa
 

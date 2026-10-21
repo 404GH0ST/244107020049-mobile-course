@@ -1,0 +1,20 @@
+{
+  "pull_request": "https://github.com/Zuhdiaja/PBL-MOBILE/pull/13",
+  "state": "MERGED",
+  "base": "main",
+  "merged_at": "2026-10-21T15:05:38Z",
+  "merged_by": "404GH0ST",
+  "merge_commit": "daceea370c2c9e3623f5517b6d3c9cf8afda1bf1",
+  "merge_commit_url": "https://github.com/Zuhdiaja/PBL-MOBILE/commit/daceea370c2c9e3623f5517b6d3c9cf8afda1bf1",
+  "approved_head": "be6a67ae679bc3ffd7f404c4f369225f040cecb4",
+  "review_decision": "APPROVED",
+  "pr_ci": "SUCCESS",
+  "issue": "https://github.com/Zuhdiaja/PBL-MOBILE/issues/12",
+  "issue_state": "CLOSED",
+  "issue_closed_at": "2026-10-21T15:05:39Z",
+  "origin_main_verified": "daceea370c2c9e3623f5517b6d3c9cf8afda1bf1",
+  "tree_diff_approved_head_vs_main": "empty",
+  "post_merge_ci_url": "https://github.com/Zuhdiaja/PBL-MOBILE/actions/runs/39622603007",
+  "post_merge_ci_status_at_first_check": "queued",
+  "feature_branch_at_check": "still present; not deleted"
+}

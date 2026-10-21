@@ -42,6 +42,8 @@ Copilot juga meninggalkan status COMMENTED bahwa kuotanya habis. Entri tersebut
 - [x] Minimal satu review sejawat dan approval manusia.
 - [x] Permintaan verifikasi tes/CI dan navigasi ditindaklanjuti.
 - [x] Source PR tetap sama dengan commit yang di-approve.
-- [ ] Merge ke main; PR masih terbuka dan issue #12 belum ditutup melalui merge.
+- [x] Merge ke main pada commit [daceea3](https://github.com/Zuhdiaja/PBL-MOBILE/commit/daceea370c2c9e3623f5517b6d3c9cf8afda1bf1); issue #12 tertutup otomatis.
+
+[Bukti merge dan pemeriksaan remote](merge-verification.md).
 
 [Metadata review dari GitHub API](evidence/peer-reviews.json).

@@ -47,7 +47,8 @@ bermakna dan hanya melaporkan masalah yang benar-benar ditemukan.
 - [x] Minimal satu review sejawat diterima: oninonins memberikan Approve pada head PR.
 - [x] Author menindaklanjuti permintaan verifikasi: analyzer bersih, 185 tes lulus ulang, CI hijau, dan alur login terkonfirmasi.
 - [x] Tidak ada Request changes; keputusan reviewer sudah Approve sehingga re-review tidak diperlukan.
-- [ ] Merge setelah approval; issue ditutup otomatis dan branch dihapus setelah merge.
+- [x] Merge ke main setelah approval; issue #12 tertutup otomatis.
+- [ ] Pembersihan branch fitur (masih tersedia, bukan syarat bukti merge).
 
 Format komentar: **observasi → dampak → usulan konkret**.
 Contoh bahan diskusi, bukan komentar yang sudah dikirim:
@@ -55,7 +56,8 @@ Contoh bahan diskusi, bukan komentar yang sudah dikirim:
 pengguna menerima konteks salah. Uji dengan Back Android dan periksa label halaman.”
 
 **Status:** [review manusia oleh oninonins](https://github.com/Zuhdiaja/PBL-MOBILE/pull/13#pullrequestreview-5601735553) sudah **APPROVED**.
-Masukan sudah diverifikasi; PR belum di-merge. [Rincian tindak lanjut](peer-review.md).
+Masukan sudah diverifikasi; PR sudah **MERGED ke main** dan issue #12 tertutup.
+[Rincian tindak lanjut](peer-review.md) dan [bukti merge](merge-verification.md).
 Entri Copilot yang gagal karena kuota tidak dihitung sebagai review sejawat.
 
 ## Praktikum 3 — pemeriksaan mesin dan kesiapan
@@ -105,8 +107,9 @@ pertahankan UI + tes sebagai unit perilaku yang bisa dijalankan.
 - [x] Laporan disusun di folder 08-week-8-mid-project-review/.
 - [x] APK debug ARM64, pemeriksaan emulator, dan screenshot asli selesai.
 - [x] Minimal satu review sejawat, tindak lanjut, dan approval manusia.
-- [ ] Merge ke main.
+- [x] Merge ke main pada commit daceea3.
 - Catatan ukuran: diff >300 baris sudah diungkapkan; review Approve tidak meminta pemecahan.
 
-Project sudah di-review dan di-approve; **definisi selesai kolaborasi Minggu 8
-masih menunggu merge ke main**.
+Project sudah di-review, di-approve, dan **di-merge ke main**; issue #12 tertutup.
+Alur kolaborasi yang diminta sudah terbukti, dengan pengecualian ukuran diff dan
+penyesuaian target main yang tetap dicatat.

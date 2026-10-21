@@ -25,12 +25,15 @@ PR PBL bersifat privat; dosen/reviewer memerlukan akses repository kelompok.
 | --- | --- |
 | Campus Notify Minggu 7 | Kode aplikasi dipertahankan; format 44 file bersih, analyzer bersih, 22 tes lulus; tiga pencarian sterilitas menghasilkan 0 kecocokan |
 | LinkGuard | Pembaruan onboarding tiga langkah, ilustrasi original besar, bahasa Indonesia, navigasi geser dan Back Android; format 140 file bersih, analyzer bersih, 185 tes lulus |
-| Kolaborasi | Issue dan PR ke main tersedia; CI otomatis; satu review sejawat APPROVED oleh oninonins; verifikasi ditindaklanjuti; merge ke main menunggu |
+| Kolaborasi | Issue dan PR ke main tersedia; CI otomatis; satu review sejawat APPROVED oleh oninonins; verifikasi ditindaklanjuti; sudah MERGED ke main; issue #12 tertutup |
 
 **Minimal satu review sejawat sudah terpenuhi:** oninonins memberikan Approve
 pada head PR. Masukan verifikasi sudah ditindaklanjuti; analyzer bersih, 185 tes
-lulus ulang, dan CI hijau. **Merge ke main belum dilakukan**, sehingga bagian
-merge pada definisi selesai Minggu 8 masih tertunda.
+lulus ulang, dan CI hijau. **PR #13 sudah MERGED ke main pada 21 Oktober 2026, 22.05 WIB**, dan issue #12
+tertutup otomatis. Alur review hingga merge sudah terpenuhi; catatan ukuran diff
+dan penyesuaian model branching tetap dicantumkan.
+
+[Bukti merge ke main](docs/merge-verification.md).
 
 [Bukti review dan tindak lanjut](docs/peer-review.md).
 
@@ -194,7 +197,7 @@ Tidak menambah repository/use case satu baris untuk state halaman lokal.
 - CI menangani format, analyze, dan test sehingga reviewer dapat fokus pada perilaku.
 - Domain/data fitur lain tetap utuh; tidak ada migrasi massal.
 - Review manusia oleh oninonins berstatus Approve. Permintaan verifikasi tes/CI
-  dan navigasi sudah ditindaklanjuti tanpa perubahan kode; merge masih menunggu.
+  dan navigasi sudah ditindaklanjuti tanpa perubahan kode; PR sudah merged ke main.
 
 ## Refleksi
 
