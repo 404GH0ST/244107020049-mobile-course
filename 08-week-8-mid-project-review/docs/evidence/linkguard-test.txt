@@ -1,0 +1,216 @@
+00:00 +0: loading <PBL-MOBILE>/App/Mobile/test/history_data_test.dart
+00:00 +0: <PBL-MOBILE>/App/Mobile/test/history_data_test.dart: HistoryRepositoryImpl maps every legacy example result to an entry
+00:00 +1: <PBL-MOBILE>/App/Mobile/test/input_scan_domain_test.dart: preview trims URLs and preserves their order and exact contents
+00:00 +2: <PBL-MOBILE>/App/Mobile/test/input_scan_domain_test.dart: preview trims URLs and preserves their order and exact contents
+00:00 +3: <PBL-MOBILE>/App/Mobile/test/repro_test.dart: dependencies expose example results
+00:00 +4: <PBL-MOBILE>/App/Mobile/test/history_data_test.dart: HistoryRepositoryImpl returns an unmodifiable list
+00:00 +5: <PBL-MOBILE>/App/Mobile/test/input_scan_domain_test.dart: one invalid URL prevents the whole batch from being previewed
+00:00 +6: <PBL-MOBILE>/App/Mobile/test/repro_test.dart: detail-info report
+00:00 +7: <PBL-MOBILE>/App/Mobile/test/repro_test.dart: detail-info report
+00:00 +8: <PBL-MOBILE>/App/Mobile/test/repro_test.dart: detail-info report
+00:00 +9: <PBL-MOBILE>/App/Mobile/test/repro_test.dart: detail-info report
+00:00 +10: <PBL-MOBILE>/App/Mobile/test/repro_test.dart: detail-info report
+00:00 +11: <PBL-MOBILE>/App/Mobile/test/repro_test.dart: detail-info report
+00:00 +12: <PBL-MOBILE>/App/Mobile/test/repro_test.dart: detail-info report
+00:00 +13: <PBL-MOBILE>/App/Mobile/test/repro_test.dart: detail-info report
+00:00 +14: <PBL-MOBILE>/App/Mobile/test/repro_test.dart: detail-info report
+00:00 +15: <PBL-MOBILE>/App/Mobile/test/repro_test.dart: detail-info report
+00:00 +16: <PBL-MOBILE>/App/Mobile/test/repro_test.dart: detail-info report
+00:00 +17: <PBL-MOBILE>/App/Mobile/test/repro_test.dart: detail-info report
+00:00 +18: <PBL-MOBILE>/App/Mobile/test/repro_test.dart: detail-info report
+00:00 +19: <PBL-MOBILE>/App/Mobile/test/repro_test.dart: detail-info report
+00:00 +20: <PBL-MOBILE>/App/Mobile/test/repro_test.dart: detail-info report
+00:00 +21: <PBL-MOBILE>/App/Mobile/test/repro_test.dart: detail-info report
+00:00 +22: <PBL-MOBILE>/App/Mobile/test/repro_test.dart: detail-info report
+00:00 +23: <PBL-MOBILE>/App/Mobile/test/repro_test.dart: detail-info report
+00:00 +24: <PBL-MOBILE>/App/Mobile/test/repro_test.dart: detail-info report
+00:01 +25: <PBL-MOBILE>/App/Mobile/test/repro_test.dart: detail-info report
+00:01 +26: <PBL-MOBILE>/App/Mobile/test/repro_test.dart: detail-info report
+00:01 +27: <PBL-MOBILE>/App/Mobile/test/repro_test.dart: detail-info report
+00:01 +28: <PBL-MOBILE>/App/Mobile/test/repro_test.dart: detail-info report
+00:01 +29: <PBL-MOBILE>/App/Mobile/test/repro_test.dart: detail-info report
+00:01 +30: <PBL-MOBILE>/App/Mobile/test/repro_test.dart: detail-info report
+00:01 +31: <PBL-MOBILE>/App/Mobile/test/repro_test.dart: detail-info report
+00:01 +32: <PBL-MOBILE>/App/Mobile/test/repro_test.dart: detail-info report
+00:01 +33: <PBL-MOBILE>/App/Mobile/test/repro_test.dart: detail-info report
+00:01 +34: <PBL-MOBILE>/App/Mobile/test/repro_test.dart: detail-info report
+00:01 +35: <PBL-MOBILE>/App/Mobile/test/repro_test.dart: detail-info report
+@@@ END report
+00:01 +36: <PBL-MOBILE>/App/Mobile/test/mobile_redesign_test.dart: theme selection retains the session and URL draft
+00:01 +37: <PBL-MOBILE>/App/Mobile/test/mobile_redesign_test.dart: theme selection retains the session and URL draft
+00:01 +38: <PBL-MOBILE>/App/Mobile/test/mobile_redesign_test.dart: theme selection retains the session and URL draft
+00:01 +39: <PBL-MOBILE>/App/Mobile/test/mobile_redesign_test.dart: theme selection retains the session and URL draft
+00:01 +40: <PBL-MOBILE>/App/Mobile/test/mobile_redesign_test.dart: theme selection retains the session and URL draft
+00:01 +41: <PBL-MOBILE>/App/Mobile/test/mobile_redesign_test.dart: theme selection retains the session and URL draft
+00:01 +42: <PBL-MOBILE>/App/Mobile/test/mobile_redesign_test.dart: theme selection retains the session and URL draft
+00:01 +43: <PBL-MOBILE>/App/Mobile/test/mobile_redesign_test.dart: theme selection retains the session and URL draft
+00:01 +44: <PBL-MOBILE>/App/Mobile/test/mobile_redesign_test.dart: theme selection retains the session and URL draft
+00:01 +45: <PBL-MOBILE>/App/Mobile/test/mobile_redesign_test.dart: theme selection retains the session and URL draft
+00:01 +46: <PBL-MOBILE>/App/Mobile/test/mobile_redesign_test.dart: theme selection retains the session and URL draft
+00:01 +47: <PBL-MOBILE>/App/Mobile/test/mobile_redesign_test.dart: theme selection retains the session and URL draft
+00:01 +48: <PBL-MOBILE>/App/Mobile/test/mobile_redesign_test.dart: theme selection retains the session and URL draft
+00:01 +49: <PBL-MOBILE>/App/Mobile/test/mobile_redesign_test.dart: theme selection retains the session and URL draft
+00:01 +49: <PBL-MOBILE>/App/Mobile/test/repro_test.dart: detail-info detail
+@@@ END detail
+00:01 +50: <PBL-MOBILE>/App/Mobile/test/mobile_redesign_test.dart: theme selection retains the session and URL draft
+00:01 +51: <PBL-MOBILE>/App/Mobile/test/mobile_redesign_test.dart: theme selection retains the session and URL draft
+00:01 +52: <PBL-MOBILE>/App/Mobile/test/mobile_redesign_test.dart: theme selection retains the session and URL draft
+00:01 +52: <PBL-MOBILE>/App/Mobile/test/repro_test.dart: detail-info result
+@@@ END result
+00:01 +53: <PBL-MOBILE>/App/Mobile/test/mobile_redesign_test.dart: theme selection retains the session and URL draft
+00:02 +54: <PBL-MOBILE>/App/Mobile/test/mobile_redesign_test.dart: theme selection retains the session and URL draft
+00:02 +55: <PBL-MOBILE>/App/Mobile/test/mobile_redesign_test.dart: theme selection retains the session and URL draft
+00:02 +56: <PBL-MOBILE>/App/Mobile/test/mobile_redesign_test.dart: theme selection retains the session and URL draft
+00:02 +57: <PBL-MOBILE>/App/Mobile/test/mobile_redesign_test.dart: theme selection retains the session and URL draft
+00:02 +58: <PBL-MOBILE>/App/Mobile/test/mobile_redesign_test.dart: theme selection retains the session and URL draft
+00:02 +59: <PBL-MOBILE>/App/Mobile/test/mobile_redesign_test.dart: theme selection retains the session and URL draft
+00:02 +60: <PBL-MOBILE>/App/Mobile/test/mobile_redesign_test.dart: theme selection retains the session and URL draft
+00:02 +61: <PBL-MOBILE>/App/Mobile/test/mobile_redesign_test.dart: theme selection retains the session and URL draft
+00:02 +62: <PBL-MOBILE>/App/Mobile/test/mobile_redesign_test.dart: theme selection retains the session and URL draft
+00:02 +63: <PBL-MOBILE>/App/Mobile/test/mobile_redesign_test.dart: theme selection retains the session and URL draft
+00:02 +64: <PBL-MOBILE>/App/Mobile/test/mobile_redesign_test.dart: theme selection retains the session and URL draft
+00:02 +65: <PBL-MOBILE>/App/Mobile/test/mobile_redesign_test.dart: theme selection retains the session and URL draft
+00:02 +66: <PBL-MOBILE>/App/Mobile/test/mobile_redesign_test.dart: theme selection retains the session and URL draft
+00:02 +67: <PBL-MOBILE>/App/Mobile/test/mobile_redesign_test.dart: theme selection retains the session and URL draft
+00:02 +68: <PBL-MOBILE>/App/Mobile/test/mobile_redesign_test.dart: theme selection retains the session and URL draft
+00:02 +69: <PBL-MOBILE>/App/Mobile/test/mobile_redesign_test.dart: theme selection retains the session and URL draft
+00:02 +70: <PBL-MOBILE>/App/Mobile/test/mobile_redesign_test.dart: theme selection retains the session and URL draft
+00:03 +71: <PBL-MOBILE>/App/Mobile/test/mobile_redesign_test.dart: theme selection retains the session and URL draft
+00:03 +72: <PBL-MOBILE>/App/Mobile/test/mobile_redesign_test.dart: theme selection retains the session and URL draft
+00:03 +73: <PBL-MOBILE>/App/Mobile/test/theme_preference_test.dart: settings offers system, light and dark and remembers the choice
+00:03 +74: <PBL-MOBILE>/App/Mobile/test/theme_preference_test.dart: settings offers system, light and dark and remembers the choice
+00:03 +75: <PBL-MOBILE>/App/Mobile/test/theme_preference_test.dart: settings offers system, light and dark and remembers the choice
+00:03 +76: <PBL-MOBILE>/App/Mobile/test/theme_preference_test.dart: settings offers system, light and dark and remembers the choice
+00:03 +77: <PBL-MOBILE>/App/Mobile/test/theme_preference_test.dart: settings offers system, light and dark and remembers the choice
+00:04 +78: <PBL-MOBILE>/App/Mobile/test/history_navigation_test.dart: history tab filters the sample entries and opens the detail
+00:04 +79: <PBL-MOBILE>/App/Mobile/test/history_navigation_test.dart: history tab filters the sample entries and opens the detail
+00:04 +80: <PBL-MOBILE>/App/Mobile/test/history_navigation_test.dart: history tab filters the sample entries and opens the detail
+00:04 +81: <PBL-MOBILE>/App/Mobile/test/history_navigation_test.dart: history tab filters the sample entries and opens the detail
+00:04 +82: <PBL-MOBILE>/App/Mobile/test/history_navigation_test.dart: history tab filters the sample entries and opens the detail
+00:04 +83: <PBL-MOBILE>/App/Mobile/test/history_navigation_test.dart: history tab filters the sample entries and opens the detail
+00:04 +84: <PBL-MOBILE>/App/Mobile/test/history_navigation_test.dart: history tab filters the sample entries and opens the detail
+00:04 +85: <PBL-MOBILE>/App/Mobile/test/history_navigation_test.dart: history tab filters the sample entries and opens the detail
+00:04 +86: <PBL-MOBILE>/App/Mobile/test/history_navigation_test.dart: history tab filters the sample entries and opens the detail
+00:04 +87: <PBL-MOBILE>/App/Mobile/test/history_navigation_test.dart: history tab filters the sample entries and opens the detail
+00:04 +88: <PBL-MOBILE>/App/Mobile/test/history_navigation_test.dart: history tab filters the sample entries and opens the detail
+00:04 +89: <PBL-MOBILE>/App/Mobile/test/history_navigation_test.dart: history tab filters the sample entries and opens the detail
+00:04 +90: <PBL-MOBILE>/App/Mobile/test/history_navigation_test.dart: history tab filters the sample entries and opens the detail
+00:04 +91: <PBL-MOBILE>/App/Mobile/test/history_navigation_test.dart: history tab filters the sample entries and opens the detail
+00:04 +92: <PBL-MOBILE>/App/Mobile/test/history_navigation_test.dart: history tab filters the sample entries and opens the detail
+00:04 +93: <PBL-MOBILE>/App/Mobile/test/history_navigation_test.dart: history tab filters the sample entries and opens the detail
+00:04 +94: <PBL-MOBILE>/App/Mobile/test/history_navigation_test.dart: history tab filters the sample entries and opens the detail
+00:04 +95: <PBL-MOBILE>/App/Mobile/test/history_navigation_test.dart: history tab filters the sample entries and opens the detail
+00:05 +96: <PBL-MOBILE>/App/Mobile/test/history_navigation_test.dart: history tab filters the sample entries and opens the detail
+00:05 +97: <PBL-MOBILE>/App/Mobile/test/history_navigation_test.dart: history tab filters the sample entries and opens the detail
+00:05 +98: <PBL-MOBILE>/App/Mobile/test/widget_test.dart: login fits a narrow viewport without layout overflow
+00:05 +99: <PBL-MOBILE>/App/Mobile/test/widget_test.dart: login fits a narrow viewport without layout overflow
+00:05 +100: <PBL-MOBILE>/App/Mobile/test/widget_test.dart: login fits a narrow viewport without layout overflow
+00:05 +100: <PBL-MOBILE>/App/Mobile/test/mobile_redesign_test.dart: correction for safe=true validates notes and category
+
+Warning: A call to tap() with finder "Found 1 widget with text "Pilih kategori": [
+  Text("Pilih kategori", dependencies: [DefaultSelectionStyle, DefaultTextStyle, MediaQuery, _ScrollableScope]),
+]" derived an Offset (Offset(226.1, 301.0)) that would not hit test on the specified widget.
+Maybe the widget is actually off-screen, or another widget is obscuring it, or the widget cannot receive pointer events.
+The finder corresponds to this RenderBox: RenderParagraph#100cb relayoutBoundary=up6
+The hit test result at that offset is: HitTestResult(_RenderDecoration#0b999@Offset(124.1, 27.0), RenderSemanticsAnnotations#69dde@Offset(124.1, 27.0), RenderPointerListener#6eb25@Offset(124.1, 27.0), RenderSemanticsGestureHandler#491d1@Offset(124.1, 27.0), RenderMouseRegion#69c83@Offset(124.1, 27.0), RenderSemanticsAnnotations#6b8b5@Offset(124.1, 27.0), RenderSemanticsAnnotations#dc911@Offset(124.1, 27.0), RenderSemanticsAnnotations#8e341@Offset(124.1, 27.0), RenderSemanticsAnnotations#25837@Offset(124.1, 27.0), RenderFlex#9ed5d@Offset(124.1, 322.0), RenderPadding#7ad23@Offset(146.1, 346.0), _RenderSingleChildViewport#48ab7@Offset(146.1, 301.0), RenderIgnorePointer#66443@Offset(146.1, 301.0), RenderSemanticsAnnotations#a9e56@Offset(146.1, 301.0), RenderPointerListener#12674@Offset(146.1, 301.0), RenderSemanticsGestureHandler#6eb3d@Offset(146.1, 301.0), RenderPointerListener#d1a44@Offset(146.1, 301.0), _RenderScrollSemantics#fdd88@Offset(146.1, 301.0), RenderClipRect#20f82@Offset(146.1, 301.0), RenderConstrainedBox#0609c@Offset(146.1, 301.0), RenderPositionedBox#a4f39@Offset(226.1, 301.0), _RenderLayoutBuilder#eb89f@Offset(226.1, 301.0), RenderPadding#d60e8@Offset(226.1, 301.0), RenderCustomMultiChildLayoutBox#1e437@Offset(226.1, 301.0), _RenderInkFeatures#6b413@Offset(226.1, 301.0), RenderPhysicalModel#7587d@Offset(226.1, 301.0), RenderSemanticsAnnotations#6d65b@Offset(226.1, 301.0), RenderRepaintBoundary#8258d@Offset(226.1, 301.0), RenderIgnorePointer#8f7d5@Offset(226.1, 301.0), RenderAnimatedOpacity#bc4e0@Offset(226.1, 301.0), RenderAnimatedOpacity#ae24a@Offset(226.1, 301.0), _RenderColoredBox#78702@Offset(226.1, 301.0), RenderAnimatedOpacity#a6b6e@Offset(226.1, 301.0), RenderIgnorePointer#976e0@Offset(226.1, 301.0), RenderAnimatedOpacity#0f563@Offset(226.1, 301.0), RenderRepaintBoundary#6dd73@Offset(226.1, 301.0), RenderSemanticsAnnotations#e049d@Offset(226.1, 301.0), RenderOffstage#26760@Offset(226.1, 301.0), RenderSemanticsAnnotations#49a7d@Offset(226.1, 301.0), _RenderTheater#8bc40@Offset(226.1, 301.0), RenderAbsorbPointer#e947d@Offset(226.1, 301.0), RenderPointerListener#564d3@Offset(226.1, 301.0), RenderSemanticsAnnotations#eb183@Offset(226.1, 301.0), RenderCustomPaint#70e85@Offset(226.1, 301.0), RenderSemanticsAnnotations#7cc11@Offset(226.1, 301.0), RenderSemanticsAnnotations#be9fe@Offset(226.1, 301.0), RenderSemanticsAnnotations#92c97@Offset(226.1, 301.0), RenderTapRegionSurface#532bf@Offset(226.1, 301.0), RenderSemanticsAnnotations#2f4dd@Offset(226.1, 301.0), RenderSemanticsAnnotations#4046e@Offset(226.1, 301.0), HitTestEntry<HitTestTarget>#8ed97(_ReusableRenderView#fca84), HitTestEntry<HitTestTarget>#5f33f(<AutomatedTestWidgetsFlutterBinding>))
+#0      WidgetController._getElementPoint (package:flutter_test/src/controller.dart:2165:25)
+#1      WidgetController.getCenter (package:flutter_test/src/controller.dart:1947:12)
+#2      WidgetController.tap (package:flutter_test/src/controller.dart:1080:7)
+#3      tapVisible (file://<PBL-MOBILE>/App/Mobile/test/scan_flow_test.dart:62:16)
+<asynchronous suspension>
+#4      main.<anonymous closure> (file://<PBL-MOBILE>/App/Mobile/test/mobile_redesign_test.dart:171:9)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+#7      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:42)
+<asynchronous suspension>
+To silence this warning, pass "warnIfMissed: false" to "tap()".
+To make this warning fatal, set WidgetController.hitTestWarningShouldBeFatal to true.
+
+00:05 +101: <PBL-MOBILE>/App/Mobile/test/mobile_redesign_test.dart: correction for safe=true validates notes and category
+00:05 +102: <PBL-MOBILE>/App/Mobile/test/history_navigation_test.dart: statistics tab shows the sample activity summary
+00:05 +103: <PBL-MOBILE>/App/Mobile/test/history_navigation_test.dart: statistics tab shows the sample activity summary
+00:06 +104: <PBL-MOBILE>/App/Mobile/test/input_scan_navigation_test.dart: home summary opens the original detail through the shell
+00:06 +105: <PBL-MOBILE>/App/Mobile/test/input_scan_navigation_test.dart: home summary opens the original detail through the shell
+00:06 +106: <PBL-MOBILE>/App/Mobile/test/input_scan_navigation_test.dart: home summary opens the original detail through the shell
+00:06 +107: <PBL-MOBILE>/App/Mobile/test/input_scan_navigation_test.dart: home summary opens the original detail through the shell
+00:06 +108: <PBL-MOBILE>/App/Mobile/test/input_scan_navigation_test.dart: home summary opens the original detail through the shell
+00:06 +109: <PBL-MOBILE>/App/Mobile/test/input_scan_navigation_test.dart: home summary opens the original detail through the shell
+00:06 +110: <PBL-MOBILE>/App/Mobile/test/input_scan_navigation_test.dart: home summary opens the original detail through the shell
+00:06 +111: <PBL-MOBILE>/App/Mobile/test/input_scan_navigation_test.dart: home summary opens the original detail through the shell
+00:06 +112: <PBL-MOBILE>/App/Mobile/test/input_scan_navigation_test.dart: home summary opens the original detail through the shell
+00:06 +113: <PBL-MOBILE>/App/Mobile/test/input_scan_navigation_test.dart: home summary opens the original detail through the shell
+00:06 +114: <PBL-MOBILE>/App/Mobile/test/input_scan_navigation_test.dart: home summary opens the original detail through the shell
+00:06 +115: <PBL-MOBILE>/App/Mobile/test/input_scan_navigation_test.dart: home summary opens the original detail through the shell
+00:06 +116: <PBL-MOBILE>/App/Mobile/test/input_scan_navigation_test.dart: home summary opens the original detail through the shell
+00:06 +117: <PBL-MOBILE>/App/Mobile/test/input_scan_navigation_test.dart: home summary opens the original detail through the shell
+00:06 +118: <PBL-MOBILE>/App/Mobile/test/input_scan_navigation_test.dart: home summary opens the original detail through the shell
+00:06 +119: <PBL-MOBILE>/App/Mobile/test/input_scan_navigation_test.dart: home summary opens the original detail through the shell
+00:06 +120: <PBL-MOBILE>/App/Mobile/test/input_scan_navigation_test.dart: home summary opens the original detail through the shell
+00:06 +121: <PBL-MOBILE>/App/Mobile/test/input_scan_navigation_test.dart: home summary opens the original detail through the shell
+00:06 +122: <PBL-MOBILE>/App/Mobile/test/input_scan_navigation_test.dart: home summary opens the original detail through the shell
+00:06 +123: <PBL-MOBILE>/App/Mobile/test/input_scan_navigation_test.dart: home summary opens the original detail through the shell
+00:06 +124: <PBL-MOBILE>/App/Mobile/test/input_scan_navigation_test.dart: home summary opens the original detail through the shell
+00:06 +125: <PBL-MOBILE>/App/Mobile/test/input_scan_navigation_test.dart: home summary opens the original detail through the shell
+00:06 +126: <PBL-MOBILE>/App/Mobile/test/input_scan_navigation_test.dart: home summary opens the original detail through the shell
+00:06 +127: <PBL-MOBILE>/App/Mobile/test/input_scan_navigation_test.dart: home summary opens the original detail through the shell
+00:06 +128: <PBL-MOBILE>/App/Mobile/test/input_scan_navigation_test.dart: home summary opens the original detail through the shell
+00:06 +129: <PBL-MOBILE>/App/Mobile/test/input_scan_navigation_test.dart: home summary opens the original detail through the shell
+00:06 +130: <PBL-MOBILE>/App/Mobile/test/input_scan_navigation_test.dart: home summary opens the original detail through the shell
+00:06 +131: <PBL-MOBILE>/App/Mobile/test/input_scan_navigation_test.dart: home summary opens the original detail through the shell
+00:06 +132: <PBL-MOBILE>/App/Mobile/test/input_scan_navigation_test.dart: home summary opens the original detail through the shell
+00:06 +133: <PBL-MOBILE>/App/Mobile/test/input_scan_navigation_test.dart: home summary opens the original detail through the shell
+00:06 +134: <PBL-MOBILE>/App/Mobile/test/input_scan_navigation_test.dart: home summary opens the original detail through the shell
+00:07 +135: <PBL-MOBILE>/App/Mobile/test/input_scan_navigation_test.dart: home summary opens the original detail through the shell
+00:07 +136: <PBL-MOBILE>/App/Mobile/test/input_scan_navigation_test.dart: home summary opens the original detail through the shell
+00:07 +137: <PBL-MOBILE>/App/Mobile/test/input_scan_navigation_test.dart: home summary opens the original detail through the shell
+00:07 +138: <PBL-MOBILE>/App/Mobile/test/input_scan_navigation_test.dart: home summary opens the original detail through the shell
+00:07 +139: <PBL-MOBILE>/App/Mobile/test/input_scan_navigation_test.dart: home summary opens the original detail through the shell
+00:07 +140: <PBL-MOBILE>/App/Mobile/test/input_scan_navigation_test.dart: home summary opens the original detail through the shell
+00:07 +141: <PBL-MOBILE>/App/Mobile/test/input_scan_navigation_test.dart: home summary opens the original detail through the shell
+00:07 +142: <PBL-MOBILE>/App/Mobile/test/input_scan_navigation_test.dart: home summary opens the original detail through the shell
+00:07 +143: <PBL-MOBILE>/App/Mobile/test/input_scan_navigation_test.dart: home summary opens the original detail through the shell
+00:07 +144: <PBL-MOBILE>/App/Mobile/test/input_scan_navigation_test.dart: home summary opens the original detail through the shell
+00:07 +145: <PBL-MOBILE>/App/Mobile/test/input_scan_navigation_test.dart: home summary opens the original detail through the shell
+00:07 +146: <PBL-MOBILE>/App/Mobile/test/input_scan_navigation_test.dart: home summary opens the original detail through the shell
+00:07 +147: <PBL-MOBILE>/App/Mobile/test/input_scan_navigation_test.dart: home summary opens the original detail through the shell
+00:07 +148: <PBL-MOBILE>/App/Mobile/test/input_scan_navigation_test.dart: home summary opens the original detail through the shell
+00:07 +149: <PBL-MOBILE>/App/Mobile/test/input_scan_navigation_test.dart: home summary opens the original detail through the shell
+00:08 +150: <PBL-MOBILE>/App/Mobile/test/widget_test.dart: auth flow opens profile settings and returns
+00:08 +151: <PBL-MOBILE>/App/Mobile/test/widget_test.dart: auth flow opens profile settings and returns
+00:08 +152: <PBL-MOBILE>/App/Mobile/test/widget_test.dart: auth flow opens profile settings and returns
+00:08 +153: <PBL-MOBILE>/App/Mobile/test/widget_test.dart: auth flow opens profile settings and returns
+00:08 +154: <PBL-MOBILE>/App/Mobile/test/widget_test.dart: auth flow opens profile settings and returns
+00:08 +155: <PBL-MOBILE>/App/Mobile/test/widget_test.dart: auth flow opens profile settings and returns
+00:08 +156: <PBL-MOBILE>/App/Mobile/test/widget_test.dart: auth flow opens profile settings and returns
+00:08 +157: <PBL-MOBILE>/App/Mobile/test/widget_test.dart: auth flow opens profile settings and returns
+00:08 +158: <PBL-MOBILE>/App/Mobile/test/widget_test.dart: auth flow opens profile settings and returns
+00:08 +159: <PBL-MOBILE>/App/Mobile/test/widget_test.dart: auth flow opens profile settings and returns
+00:08 +160: <PBL-MOBILE>/App/Mobile/test/scan_flow_test.dart: scan method cards keep equal dimensions with wrapped text
+00:09 +161: <PBL-MOBILE>/App/Mobile/test/scan_flow_test.dart: scan method cards keep equal dimensions with wrapped text
+00:09 +162: <PBL-MOBILE>/App/Mobile/test/scan_flow_test.dart: scan method cards keep equal dimensions with wrapped text
+00:09 +163: <PBL-MOBILE>/App/Mobile/test/scan_flow_test.dart: scan method cards keep equal dimensions with wrapped text
+00:09 +164: <PBL-MOBILE>/App/Mobile/test/scan_flow_test.dart: scan method cards keep equal dimensions with wrapped text
+00:09 +165: <PBL-MOBILE>/App/Mobile/test/scan_flow_test.dart: scan method cards keep equal dimensions with wrapped text
+00:09 +166: <PBL-MOBILE>/App/Mobile/test/scan_flow_test.dart: scan method cards keep equal dimensions with wrapped text
+00:09 +167: <PBL-MOBILE>/App/Mobile/test/scan_flow_test.dart: scan method cards keep equal dimensions with wrapped text
+00:09 +168: <PBL-MOBILE>/App/Mobile/test/scan_flow_test.dart: scan method cards keep equal dimensions with wrapped text
+00:09 +169: <PBL-MOBILE>/App/Mobile/test/input_scan_navigation_test.dart: sharing has fresh route state when it is reopened
+00:09 +170: <PBL-MOBILE>/App/Mobile/test/input_scan_navigation_test.dart: sharing has fresh route state when it is reopened
+00:09 +171: <PBL-MOBILE>/App/Mobile/test/input_scan_navigation_test.dart: sharing has fresh route state when it is reopened
+00:09 +172: <PBL-MOBILE>/App/Mobile/test/input_scan_navigation_test.dart: sharing has fresh route state when it is reopened
+00:09 +173: <PBL-MOBILE>/App/Mobile/test/input_scan_navigation_test.dart: sharing has fresh route state when it is reopened
+00:09 +174: <PBL-MOBILE>/App/Mobile/test/input_scan_navigation_test.dart: sharing has fresh route state when it is reopened
+00:09 +175: <PBL-MOBILE>/App/Mobile/test/scan_flow_test.dart: home shortcuts open QR and sharing; system back and tabs work
+00:09 +176: <PBL-MOBILE>/App/Mobile/test/scan_flow_test.dart: home shortcuts open QR and sharing; system back and tabs work
+00:09 +177: <PBL-MOBILE>/App/Mobile/test/scan_flow_test.dart: home shortcuts open QR and sharing; system back and tabs work
+00:09 +178: <PBL-MOBILE>/App/Mobile/test/scan_flow_test.dart: home shortcuts open QR and sharing; system back and tabs work
+00:09 +179: <PBL-MOBILE>/App/Mobile/test/scan_flow_test.dart: home shortcuts open QR and sharing; system back and tabs work
+00:09 +180: <PBL-MOBILE>/App/Mobile/test/scan_flow_test.dart: URL form enforces five fields, validates, and preserves drafts across tabs
+00:10 +181: <PBL-MOBILE>/App/Mobile/test/scan_flow_test.dart: paste shortcut fills the first URL and handles an empty clipboard
+00:10 +182: <PBL-MOBILE>/App/Mobile/test/scan_flow_test.dart: sharing previews an editable example and validates before continuing
+00:10 +183: <PBL-MOBILE>/App/Mobile/test/scan_flow_test.dart: four screens fit Size(320.0, 640.0) with larger text and keyboard insets
+00:10 +184: <PBL-MOBILE>/App/Mobile/test/scan_flow_test.dart: four screens fit Size(412.0, 915.0) with larger text and keyboard insets
+00:10 +185: All tests passed!

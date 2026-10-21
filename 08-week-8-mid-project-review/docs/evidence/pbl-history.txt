@@ -1,0 +1,15 @@
+e9bb183 Merge pull request #11 from Zuhdiaja/feat/mobile-theme-mode
+e393dea feat(mobile-theme): persist theme mode and add system option
+dd7de64 Merge pull request #10 from Zuhdiaja/feat/add-onboarding-page
+42d03d7 refactor(mobile-onboarding): centralize splash colors and fix dark mode
+da6573b feat(onboarding): add onboarding page with navigation and skip functionality
+43cd8a2 Merge pull request #8 from Zuhdiaja/feat/admin-dashboard
+a426666 fix(mobile-auth): center email divider across text sizes
+f65b9fa feat(mobile-history): redesign monitoring with async loading states
+de5a529 feat(mobile-scan): redesign input and results with cancellable preparation
+74f9efc feat(mobile-auth): redesign account screens and restore sessions on splash
+d4de785 feat(mobile): add Manrope themes and async loading components
+b33b9ed chore(git): ignore mobile mockup archive
+4c5d54d chore(git): exclude local notes and assistant metadata
+1d291ba build(deploy): add Docker services and dashboard CI
+372e1f0 feat(users): manage dashboard admins and mobile accounts
