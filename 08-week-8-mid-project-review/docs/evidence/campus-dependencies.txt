@@ -1,0 +1,11 @@
+Pemeriksaan 1: rg -n Dio\(|http\.|openDatabase|getDatabasesPath|FlutterSecureStorage|SharedPreferences\.getInstance|jsonDecode
+Exit: 1
+(0 kecocokan)
+
+Pemeriksaan 2: rg -n (?:import|export) ['"]package:
+Exit: 1
+(0 kecocokan)
+
+Pemeriksaan 3: rg -n DateFormat|jsonDecode|\.toIso8601String|Repository\(|Dio\(BaseOptions
+Exit: 1
+(0 kecocokan)

@@ -1,0 +1,8 @@
+  backup/week7-before-docs-cleanup-20261014-151548
+  backup/week7-before-rewrite-20261014-145046
+  develop
+* docs/week-8-mid-project-review
+  main
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/develop
+  remotes/origin/main

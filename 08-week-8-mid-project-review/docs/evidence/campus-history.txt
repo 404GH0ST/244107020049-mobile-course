@@ -1,0 +1,15 @@
+89a80c3 docs(week-7): complete module README, portfolio checklist, and architecture reflections
+351ee41 docs(week-7): record APK checks, emulator comparisons, and FCM lifecycle evidence
+68b55e8 docs(week-7): evaluate AI proposals, file mapping, and architecture trade-offs
+e921e46 test(week-7): verify use cases, failures, provider overrides, and deep-link redirects
+07af03f refactor(week-7): wire Riverpod DI and isolate presentation from SDKs (Praktikum 3)
+be5b9a7 refactor(week-7): separate entities, repository contracts, models, and use cases (Praktikum 2)
+ae65260 docs(week-7): audit existing layers and plan feature-first structure (Praktikum 1)
+6d1b4f7 chore(week-7): snapshot Campus Notify before clean architecture
+4bc2942 docs(week-6): add README, emulator screenshots, verification checklist, and refleksi
+2ef9579 feat(week-6): document AI Challenge verification and provide FCM payload sender
+fe928e5 test(week-6): verify payload routes, auth sessions, and single token refresh
+4f58ba2 refactor(week-6): centralize routes, extract payload parser, and map API errors
+f545119 feat(week-6): integrate Firebase permission, token lifecycle, and notification deep links (Praktikum 2-3)
+45f92a0 feat(week-6): setup project, implement secure token storage, mock auth, and refresh guard (Praktikum 1)
+e2cee0c docs(week-5): add README, screenshots, checklist, and refleksi documentation
