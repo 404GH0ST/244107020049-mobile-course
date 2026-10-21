@@ -18,5 +18,6 @@
   "post_merge_ci_status_at_first_check": "queued",
   "feature_branch_at_check": "still present; not deleted",
   "post_merge_ci_final_status": "completed",
-  "post_merge_ci_final_conclusion": "success"
+  "post_merge_ci_final_conclusion": "success",
+  "feature_branch_final_state": "remote deleted after approved head ancestry verified in origin/main; local worktree retained"
 }

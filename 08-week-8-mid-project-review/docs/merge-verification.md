@@ -35,9 +35,11 @@ terakhir memastikan **COMPLETED / SUCCESS** pada merge commit daceea3.
 Dengan demikian **CI PR dan CI setelah merge sama-sama berhasil**.
 [Bukti CI setelah merge](evidence/post-merge-ci.json).
 
-Branch feature/onboarding-visuals masih tersedia saat pemeriksaan. Tidak
-menghapus branch atau mengubah aturan proteksi/default branch sebagai bagian
-verifikasi merge.
+Pada pemeriksaan awal, branch feature/onboarding-visuals masih tersedia.
+Pada audit kelengkapan berikutnya, ancestry head terhadap main diverifikasi
+(exit 0), lalu branch remote tersebut dihapus sesuai workflow modul. Commit
+tetap tersimpan pada main dan branch lokal worktree tetap dipertahankan.
+Tidak mengubah aturan proteksi/default branch.
 
 Alur issue → PR → satu review sejawat → tindak lanjut → approval → merge kini
 terbukti selesai. Penyimpangan ukuran PR >300 baris dan penyesuaian target main

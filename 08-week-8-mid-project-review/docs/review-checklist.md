@@ -48,7 +48,7 @@ bermakna dan hanya melaporkan masalah yang benar-benar ditemukan.
 - [x] Author menindaklanjuti permintaan verifikasi: analyzer bersih, 185 tes lulus ulang, CI hijau, dan alur login terkonfirmasi.
 - [x] Tidak ada Request changes; keputusan reviewer sudah Approve sehingga re-review tidak diperlukan.
 - [x] Merge ke main setelah approval; issue #12 tertutup otomatis.
-- [ ] Pembersihan branch fitur (masih tersedia, bukan syarat bukti merge).
+- [x] Branch remote feature/onboarding-visuals dihapus setelah merge; commit tetap tersimpan pada main.
 
 Format komentar: **observasi → dampak → usulan konkret**.
 Contoh bahan diskusi, bukan komentar yang sudah dikirim:
