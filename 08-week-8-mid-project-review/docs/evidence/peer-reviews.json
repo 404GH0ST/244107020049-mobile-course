@@ -1,0 +1,16 @@
+[
+  {
+    "author": "copilot-pull-request-reviewer[bot]",
+    "commit_id": "be6a67ae679bc3ffd7f404c4f369225f040cecb4",
+    "html_url": "https://github.com/Zuhdiaja/PBL-MOBILE/pull/13#pullrequestreview-5601579928",
+    "state": "COMMENTED",
+    "submitted_at": "2026-10-21T14:48:06Z"
+  },
+  {
+    "author": "oninonins",
+    "commit_id": "be6a67ae679bc3ffd7f404c4f369225f040cecb4",
+    "html_url": "https://github.com/Zuhdiaja/PBL-MOBILE/pull/13#pullrequestreview-5601735553",
+    "state": "APPROVED",
+    "submitted_at": "2026-10-21T15:00:01Z"
+  }
+]

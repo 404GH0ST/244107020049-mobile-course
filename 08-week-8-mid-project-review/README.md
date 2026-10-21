@@ -25,11 +25,14 @@ PR PBL bersifat privat; dosen/reviewer memerlukan akses repository kelompok.
 | --- | --- |
 | Campus Notify Minggu 7 | Kode aplikasi dipertahankan; format 44 file bersih, analyzer bersih, 22 tes lulus; tiga pencarian sterilitas menghasilkan 0 kecocokan |
 | LinkGuard | Pembaruan onboarding tiga langkah, ilustrasi original besar, bahasa Indonesia, navigasi geser dan Back Android; format 140 file bersih, analyzer bersih, 185 tes lulus |
-| Kolaborasi | Issue dan PR ke main tersedia; CI otomatis; review sejawat/approve/merge menunggu anggota tim |
+| Kolaborasi | Issue dan PR ke main tersedia; CI otomatis; satu review sejawat APPROVED oleh oninonins; verifikasi ditindaklanjuti; merge ke main menunggu |
 
-**Belum menyatakan seluruh definisi selesai Minggu 8 terpenuhi.** Review AI dan
-pengujian lokal tidak menggantikan minimal satu review sejawat, tindak lanjut bila ada,
-approval, serta merge melalui review yang diminta modul.
+**Minimal satu review sejawat sudah terpenuhi:** oninonins memberikan Approve
+pada head PR. Masukan verifikasi sudah ditindaklanjuti; analyzer bersih, 185 tes
+lulus ulang, dan CI hijau. **Merge ke main belum dilakukan**, sehingga bagian
+merge pada definisi selesai Minggu 8 masih tertunda.
+
+[Bukti review dan tindak lanjut](docs/peer-review.md).
 
 ## Fitur utama dan stack
 
@@ -78,7 +81,7 @@ verifikasi otomatis, serta gambar emulator. Contoh gaya penjelasan mengikuti
 [PR #11](https://github.com/Zuhdiaja/PBL-MOBILE/pull/11), dengan tambahan bukti
 regresi dan checklist Minggu 8.
 
-Checklist review manusia dan tindak lanjut yang masih menunggu ada pada
+Checklist review manusia dan status tindak lanjut ada pada
 [docs/review-checklist.md](docs/review-checklist.md#praktikum-2--issue-pr-dan-review-sejawat).
 Tidak mengirim komentar atau approval atas nama anggota tim.
 
@@ -190,8 +193,8 @@ Tidak menambah repository/use case satu baris untuk state halaman lokal.
 - Dua masalah yang dibuktikan sudah diperbaiki dan dilindungi tes.
 - CI menangani format, analyze, dan test sehingga reviewer dapat fokus pada perilaku.
 - Domain/data fitur lain tetap utuh; tidak ada migrasi massal.
-- Komentar request changes dari manusia belum tersedia, sehingga tindak lanjut
-  sejawat, re-review, approve, dan merge belum dapat dinyatakan selesai.
+- Review manusia oleh oninonins berstatus Approve. Permintaan verifikasi tes/CI
+  dan navigasi sudah ditindaklanjuti tanpa perubahan kode; merge masih menunggu.
 
 ## Refleksi
 
@@ -205,10 +208,11 @@ Tidak menambah repository/use case satu baris untuk state halaman lokal.
 3. **Saran AI yang ditolak:** persistensi langsung di widget. Jika kelak diminta,
    buat kontrak domain dan adapter data melalui composition root. Pada PR ini
    perilaku startup lama dipertahankan.
-4. **Perbaikan setelah review sejawat:** belum dapat diisi sebagai kejadian nyata
-   karena review manusia belum berlangsung. Perbaikan setelah review AI adalah
-   navigasi Back dan label Indonesia; dampaknya sudah dibuktikan dengan tes.
-   Bagian ini harus diperbarui setelah reviewer pasangan memberi masukan.
+4. **Tindak lanjut setelah review sejawat:** reviewer meminta memastikan tes/CI
+   berhasil dan tujuan navigasi tetap login lama. Analyzer dan 185 tes dijalankan
+   ulang, CI diperiksa pada head yang sama, serta bukti emulator dicocokkan. Tidak
+   mengarang perubahan kode karena reviewer sudah Approve tanpa Request changes.
+   Dampaknya adalah bukti verifikasi tetap sesuai commit yang disetujui.
 
 ## Struktur artefak
 

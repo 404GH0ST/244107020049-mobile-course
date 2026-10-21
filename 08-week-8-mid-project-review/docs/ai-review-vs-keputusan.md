@@ -79,8 +79,9 @@ Widget tidak mengimpor data layer dan tidak membuat repository konkret.
 - Onboarding tetap muncul sesuai perilaku launch gate lama ketika sesi aplikasi dimulai lagi.
 - Pembaruan ini tidak mengubah project Campus Notify Minggu 7; audit 22 tesnya
   dijalankan ulang dan dilampirkan secara terpisah.
-- Belum ada komentar atau keputusan reviewer manusia pada saat laporan disiapkan.
-  Tidak membuat komentar palsu, self-approval, atau klaim merge.
+- Pembaruan: oninonins sudah memberi Approve pada head PR. Masukan verifikasi
+  ditindaklanjuti; lihat [review sejawat](peer-review.md). Tidak ada self-approval
+  atau klaim merge; PR masih terbuka.
 
 ## Referensi API yang diperiksa
 
