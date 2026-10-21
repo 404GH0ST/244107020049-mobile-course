@@ -16,5 +16,7 @@
   "tree_diff_approved_head_vs_main": "empty",
   "post_merge_ci_url": "https://github.com/Zuhdiaja/PBL-MOBILE/actions/runs/39622603007",
   "post_merge_ci_status_at_first_check": "queued",
-  "feature_branch_at_check": "still present; not deleted"
+  "feature_branch_at_check": "still present; not deleted",
+  "post_merge_ci_final_status": "completed",
+  "post_merge_ci_final_conclusion": "success"
 }

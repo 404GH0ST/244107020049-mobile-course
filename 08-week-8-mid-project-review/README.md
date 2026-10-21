@@ -34,6 +34,8 @@ tertutup otomatis. Alur review hingga merge sudah terpenuhi; catatan ukuran diff
 dan penyesuaian model branching tetap dicantumkan.
 
 [Bukti merge ke main](docs/merge-verification.md).
+[CI setelah merge juga berhasil](https://github.com/Zuhdiaja/PBL-MOBILE/actions/runs/39622603007),
+dengan [bukti status akhir](docs/evidence/post-merge-ci.json).
 
 [Bukti review dan tindak lanjut](docs/peer-review.md).
 

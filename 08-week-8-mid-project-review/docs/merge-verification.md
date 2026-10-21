@@ -30,8 +30,10 @@ identik dengan head yang lulus tes ulang dan review. Bukti emulator juga tetap
 merujuk kode tersebut.
 
 [CI setelah push ke main](https://github.com/Zuhdiaja/PBL-MOBILE/actions/runs/39622603007)
-terpicu dan masih antre pada pemeriksaan awal; status tersebut dibedakan dari
-CI PR yang sudah sukses.
+terpicu setelah merge. Pada pemeriksaan awal run masih antre; pemeriksaan
+terakhir memastikan **COMPLETED / SUCCESS** pada merge commit daceea3.
+Dengan demikian **CI PR dan CI setelah merge sama-sama berhasil**.
+[Bukti CI setelah merge](evidence/post-merge-ci.json).
 
 Branch feature/onboarding-visuals masih tersedia saat pemeriksaan. Tidak
 menghapus branch atau mengubah aturan proteksi/default branch sebagai bagian
