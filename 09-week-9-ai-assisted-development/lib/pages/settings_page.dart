@@ -6,8 +6,9 @@ import '../data/sync.dart';
 
 final prefsRepositoryProvider = Provider((ref) => PrefsRepository());
 
-final darkModeProvider =
-    AsyncNotifierProvider<DarkModeNotifier, bool>(DarkModeNotifier.new);
+final darkModeProvider = AsyncNotifierProvider<DarkModeNotifier, bool>(
+  DarkModeNotifier.new,
+);
 
 class DarkModeNotifier extends AsyncNotifier<bool> {
   @override
@@ -36,9 +37,7 @@ class SettingsPage extends ConsumerWidget {
     final lastOpenedAsync = ref.watch(lastOpenedProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Pengaturan & Preferensi'),
-      ),
+      appBar: AppBar(title: const Text('Pengaturan & Preferensi')),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -50,15 +49,14 @@ class SettingsPage extends ConsumerWidget {
                   padding: EdgeInsets.fromLTRB(16, 16, 16, 8),
                   child: Text(
                     'SharedPreferences (Key-Value)',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ),
                 SwitchListTile(
                   title: const Text('Mode Gelap (Dark Mode)'),
-                  subtitle: const Text('Simpan preferensi tema aplikasi secara lokal'),
+                  subtitle: const Text(
+                    'Simpan preferensi tema aplikasi secara lokal',
+                  ),
                   secondary: Icon(
                     darkModeAsync.value == true
                         ? Icons.dark_mode
@@ -95,10 +93,7 @@ class SettingsPage extends ConsumerWidget {
                   padding: EdgeInsets.fromLTRB(16, 16, 16, 8),
                   child: Text(
                     'Simulasi Jaringan (Offline-First)',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ),
                 SwitchListTile(
@@ -110,7 +105,9 @@ class SettingsPage extends ConsumerWidget {
                     ref.watch(forceOfflineProvider)
                         ? Icons.cloud_off
                         : Icons.cloud_queue,
-                    color: ref.watch(forceOfflineProvider) ? Colors.orange : null,
+                    color: ref.watch(forceOfflineProvider)
+                        ? Colors.orange
+                        : null,
                   ),
                   value: ref.watch(forceOfflineProvider),
                   onChanged: (val) {

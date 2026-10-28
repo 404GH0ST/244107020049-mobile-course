@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sqflite/sqflite.dart';
@@ -29,11 +30,11 @@ class Post {
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'userId': userId,
-        'title': title,
-        'body': body,
-      };
+    'id': id,
+    'userId': userId,
+    'title': title,
+    'body': body,
+  };
 }
 
 /// Helper untuk membaca seluruh posts yang tersimpan di SQLite cached_posts
@@ -56,15 +57,11 @@ Future<void> saveCachedPosts(
   final db = await (openDb ?? openNotesDb)();
   final batch = db.batch();
   for (final post in posts) {
-    batch.insert(
-      'cached_posts',
-      {
-        'id': post.id,
-        'payload': jsonEncode(post.toJson()),
-        'cached_at': DateTime.now().toIso8601String(),
-      },
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
+    batch.insert('cached_posts', {
+      'id': post.id,
+      'payload': jsonEncode(post.toJson()),
+      'cached_at': DateTime.now().toIso8601String(),
+    }, conflictAlgorithm: ConflictAlgorithm.replace);
   }
   await batch.commit(noResult: true);
 }
@@ -95,10 +92,7 @@ final dioProvider = Provider<Dio>((ref) {
 
 /// Logika sinkronisasi catatan berstatus kotor (dirty = 1)
 /// Menjalankan simulasi upload berurutan dan menandai bersih bila berhasil
-Future<int> syncNotes(
-  NoteRepository repo, {
-  bool forceOffline = false,
-}) async {
+Future<int> syncNotes(NoteRepository repo, {bool forceOffline = false}) async {
   if (forceOffline) {
     throw Exception('Gagal sinkronisasi: Perangkat sedang dalam mode offline.');
   }
@@ -118,8 +112,8 @@ Future<int> syncNotes(
 /// Notifier untuk membaca data posts dengan strategi Cache-First
 final cachedPostsProvider =
     AsyncNotifierProvider<CachedPostsNotifier, List<Post>>(
-  CachedPostsNotifier.new,
-);
+      CachedPostsNotifier.new,
+    );
 
 class CachedPostsNotifier extends AsyncNotifier<List<Post>> {
   @override
@@ -135,9 +129,7 @@ class CachedPostsNotifier extends AsyncNotifier<List<Post>> {
       if (cached.isNotEmpty) {
         return cached;
       }
-      throw Exception(
-        'Mode offline aktif dan belum ada data cache di SQLite.',
-      );
+      throw Exception('Mode offline aktif dan belum ada data cache di SQLite.');
     }
 
     // Jika ada cache lokal, tampilkan segera (cache-first read)

@@ -16,7 +16,9 @@ class CachedPostsPage extends ConsumerWidget {
         title: const Text('Cache-First API Posts'),
         actions: [
           IconButton(
-            tooltip: isOffline ? 'Matikan Mode Offline' : 'Aktifkan Mode Offline',
+            tooltip: isOffline
+                ? 'Matikan Mode Offline'
+                : 'Aktifkan Mode Offline',
             icon: Icon(
               isOffline ? Icons.wifi_off : Icons.wifi,
               color: isOffline ? Colors.orange : null,
@@ -102,12 +104,13 @@ class CachedPostsPage extends ConsumerWidget {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.signal_wifi_bad, size: 48, color: Colors.red),
-                      const SizedBox(height: 12),
-                      Text(
-                        '$error',
-                        textAlign: TextAlign.center,
+                      const Icon(
+                        Icons.signal_wifi_bad,
+                        size: 48,
+                        color: Colors.red,
                       ),
+                      const SizedBox(height: 12),
+                      Text('$error', textAlign: TextAlign.center),
                       const SizedBox(height: 16),
                       FilledButton.icon(
                         onPressed: () {
@@ -139,9 +142,7 @@ class CachedPostsPage extends ConsumerWidget {
                       return Card(
                         elevation: 1,
                         child: ListTile(
-                          leading: CircleAvatar(
-                            child: Text('${post.id}'),
-                          ),
+                          leading: CircleAvatar(child: Text('${post.id}')),
                           title: Text(
                             post.title,
                             maxLines: 1,

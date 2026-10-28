@@ -27,14 +27,16 @@ class NoteDetailPage extends ConsumerWidget {
                           IconButton(
                             icon: const Icon(Icons.edit_outlined),
                             tooltip: 'Edit Catatan',
-                            onPressed: () => _showEditDialog(context, ref, note),
+                            onPressed: () =>
+                                _showEditDialog(context, ref, note),
                           ),
                           IconButton(
-                            icon: const Icon(Icons.delete_outline,
-                                color: Colors.red),
+                            icon: const Icon(
+                              Icons.delete_outline,
+                              color: Colors.red,
+                            ),
                             tooltip: 'Hapus Catatan',
-                            onPressed: () =>
-                                _confirmDelete(context, ref, note),
+                            onPressed: () => _confirmDelete(context, ref, note),
                           ),
                         ],
                       ),
@@ -102,7 +104,9 @@ class NoteDetailPage extends ConsumerWidget {
             children: [
               Card(
                 elevation: 0,
-                color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+                color: theme.colorScheme.surfaceContainerHighest.withValues(
+                  alpha: 0.5,
+                ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                   side: BorderSide(color: theme.colorScheme.outlineVariant),
@@ -141,7 +145,9 @@ class NoteDetailPage extends ConsumerWidget {
                               decoration: BoxDecoration(
                                 color: Colors.amber.shade100,
                                 borderRadius: BorderRadius.circular(12),
-                                border: Border.all(color: Colors.amber.shade700),
+                                border: Border.all(
+                                  color: Colors.amber.shade700,
+                                ),
                               ),
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
@@ -172,7 +178,9 @@ class NoteDetailPage extends ConsumerWidget {
                               decoration: BoxDecoration(
                                 color: Colors.green.shade50,
                                 borderRadius: BorderRadius.circular(12),
-                                border: Border.all(color: Colors.green.shade600),
+                                border: Border.all(
+                                  color: Colors.green.shade600,
+                                ),
                               ),
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
@@ -299,7 +307,9 @@ class NoteDetailPage extends ConsumerWidget {
             onPressed: () {
               final newTitle = titleController.text.trim();
               if (newTitle.isEmpty) return;
-              ref.read(notesProvider.notifier).updateNote(
+              ref
+                  .read(notesProvider.notifier)
+                  .updateNote(
                     id: note.id!,
                     title: newTitle,
                     body: bodyController.text.trim(),

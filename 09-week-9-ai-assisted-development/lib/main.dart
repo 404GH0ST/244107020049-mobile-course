@@ -12,11 +12,7 @@ void main() async {
   final prefsRepo = PrefsRepository();
   await prefsRepo.markOpenedNow();
 
-  runApp(
-    const ProviderScope(
-      child: OfflineNotesApp(),
-    ),
-  );
+  runApp(const ProviderScope(child: OfflineNotesApp()));
 }
 
 class OfflineNotesApp extends ConsumerWidget {

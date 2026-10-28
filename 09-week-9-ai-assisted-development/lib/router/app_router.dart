@@ -9,10 +9,7 @@ import '../pages/settings_page.dart';
 final appRouter = GoRouter(
   initialLocation: '/',
   routes: [
-    GoRoute(
-      path: '/',
-      builder: (context, state) => const NotesPage(),
-    ),
+    GoRoute(path: '/', builder: (context, state) => const NotesPage()),
     GoRoute(
       path: '/note/:id',
       builder: (context, state) {

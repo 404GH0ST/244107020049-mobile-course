@@ -3,12 +3,7 @@ import 'package:flutter/material.dart';
 import '../data/local/note.dart';
 
 class NoteTile extends StatelessWidget {
-  const NoteTile({
-    super.key,
-    required this.note,
-    this.onTap,
-    this.onDelete,
-  });
+  const NoteTile({super.key, required this.note, this.onTap, this.onDelete});
 
   final Note note;
   final VoidCallback? onTap;

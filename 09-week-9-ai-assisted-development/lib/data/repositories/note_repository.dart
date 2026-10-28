@@ -1,12 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sqflite/sqflite.dart';
 
+import '../../domain/usecases/search_notes.dart';
 import '../local/db.dart';
 import '../local/note.dart';
 
 class NoteRepository {
   NoteRepository({Future<Database> Function()? openDb})
-      : _openDb = openDb ?? openNotesDb;
+    : _openDb = openDb ?? openNotesDb;
 
   final Future<Database> Function() _openDb;
 
@@ -140,16 +141,36 @@ class NotesNotifier extends AsyncNotifier<List<Note>> {
   }
 }
 
-final dirtyCountProvider = FutureProvider<int>(
-  (ref) async {
-    final repo = ref.watch(noteRepositoryProvider);
-    return repo.countDirty();
-  },
-  retry: (retryCount, error) => null,
-);
+final dirtyCountProvider = FutureProvider<int>((ref) async {
+  final repo = ref.watch(noteRepositoryProvider);
+  return repo.countDirty();
+}, retry: (retryCount, error) => null);
 
-final noteDetailProvider =
-    FutureProvider.family<Note?, int>((ref, id) async {
+final noteDetailProvider = FutureProvider.family<Note?, int>((ref, id) async {
   final repo = ref.watch(noteRepositoryProvider);
   return repo.getNoteById(id);
 }, retry: (retryCount, error) => null);
+
+final searchNotesUseCaseProvider = Provider<SearchNotesUseCase>((ref) {
+  return const SearchNotesUseCase();
+});
+
+class SearchQueryNotifier extends Notifier<String> {
+  @override
+  String build() => '';
+
+  void setQuery(String query) => state = query;
+  void clear() => state = '';
+}
+
+final searchQueryProvider = NotifierProvider<SearchQueryNotifier, String>(
+  SearchQueryNotifier.new,
+);
+
+final filteredNotesProvider = Provider<AsyncValue<List<Note>>>((ref) {
+  final notesAsync = ref.watch(notesProvider);
+  final query = ref.watch(searchQueryProvider);
+  final searchUseCase = ref.watch(searchNotesUseCaseProvider);
+
+  return notesAsync.whenData((notes) => searchUseCase(notes, query));
+});
