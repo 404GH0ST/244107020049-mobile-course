@@ -22,3 +22,4 @@ Repository ini berisi kumpulan kode sumber, praktikum, mini assignment, dan doku
 | 06 | Authentication, Security & FCM | [`06-week-6-authentication-security-fcm`](./06-week-6-authentication-security-fcm) |
 | 07 | Clean Architecture | [`07-week-7-clean-architecture`](./07-week-7-clean-architecture) |
 | 08 | Mid Project Review & Code Review | [`08-week-8-mid-project-review`](./08-week-8-mid-project-review) |
+| 09 | AI-Assisted Development & Vibe Coding | [`09-week-9-ai-assisted-development`](./09-week-9-ai-assisted-development) |
