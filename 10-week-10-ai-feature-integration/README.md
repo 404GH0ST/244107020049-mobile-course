@@ -206,7 +206,7 @@ Pemeriksaan pada 4 November 2026:
 | `dart format --output=none --set-exit-if-changed lib test integration_test` | 62 berkas diperiksa, 0 perubahan |
 | `flutter analyze` | No issues found |
 | `flutter test` | 58 test lulus |
-| `flutter build apk --debug` | APK debug berhasil dibangun dan dipasang pada emulator |
+| Build dan instalasi APK integration test | APK pengujian berhasil dibangun dan dipasang pada emulator |
 | Suite Android untuk navigasi, privasi, rekaman, streaming, cache, kuota, dan retry | 2 integration test lulus |
 | Suite Android dengan API Gemini live | 1 integration test lulus, mencakup chat, OCR, deskripsi gambar, dan transkripsi suara sesungguhnya |
 
