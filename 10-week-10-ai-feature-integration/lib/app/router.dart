@@ -26,7 +26,10 @@ final routerProvider = Provider((ref) {
         ).toString();
       }
       if (loggedIn && login) {
-        return routeFromMessage({'route': state.uri.queryParameters['from']});
+        final from = state.uri.queryParameters['from'];
+        return from == AppRoutes.chat
+            ? AppRoutes.chat
+            : routeFromMessage({'route': from});
       }
       return null;
     },

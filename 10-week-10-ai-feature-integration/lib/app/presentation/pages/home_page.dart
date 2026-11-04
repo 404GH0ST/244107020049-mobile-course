@@ -51,7 +51,7 @@ class _HomePageState extends ConsumerState<HomePage> {
               leading: const CircleAvatar(child: Icon(Icons.auto_awesome)),
               title: const Text('Asisten AI Kampus Pintar'),
               subtitle: const Text(
-                'Tanya jadwal, KRS, info akademik, OCR & Voice',
+                'Panduan kampus, OCR, deskripsi gambar, dan transkripsi suara',
               ),
               trailing: const Icon(Icons.chevron_right),
               onTap: () => context.push(AppRoutes.chat),

@@ -42,9 +42,15 @@ class AiChatRepositoryImpl implements AiChatRepository {
   Future<void> deleteApiKey() => _aiService.deleteApiKey();
 
   @override
-  Future<Result<String>> recognizeText(String imagePathOrDescription) async {
+  Future<Result<String>> recognizeText(
+    String imagePathOrDescription, {
+    bool describe = false,
+  }) async {
     try {
-      final result = await _aiService.recognizeText(imagePathOrDescription);
+      final result = await _aiService.recognizeText(
+        imagePathOrDescription,
+        describe: describe,
+      );
       return (value: result, failure: null);
     } catch (e) {
       return (

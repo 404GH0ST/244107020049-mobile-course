@@ -42,12 +42,12 @@ void main() {
 
       await tester.pumpAndSettle();
 
-      expect(find.text('Bagaimana cara izin sakit kuliah?'), findsOneWidget);
+      expect(find.text('Panduan lokal offline'), findsOneWidget);
       expect(
         find.textContaining('Pengajuan izin ketidakhadiran kuliah'),
         findsOneWidget,
       );
-      expect(find.text('Offline Campus Knowledge'), findsOneWidget);
+      expect(find.text('Panduan lokal offline'), findsOneWidget);
     },
   );
 
@@ -94,43 +94,33 @@ void main() {
     expect(await storage.read(key: 'ai_api_key'), equals('AIzaSyDemoKey123'));
   });
 
-  testWidgets('fitur OCR mengekstrak informasi dokumen ke chat', (
+  testWidgets('gambar menawarkan kamera dan galeri untuk OCR dan deskripsi', (
     tester,
   ) async {
     await tester.pumpWidget(buildTestableWidget());
     await tester.pumpAndSettle();
-
-    final ocrButton = find.byTooltip('OCR Dokumen');
-    await tester.tap(ocrButton);
+    await tester.tap(find.byTooltip('OCR Dokumen'));
     await tester.pumpAndSettle();
-
-    expect(find.text('OCR Dokumen Kampus'), findsOneWidget);
-    await tester.tap(find.text('Scan Kartu Tanda Mahasiswa (KTM)'));
-    await tester.pumpAndSettle();
-
-    expect(find.textContaining('Hasil OCR KTM'), findsOneWidget);
-    expect(find.textContaining('NIM: 244107020049'), findsOneWidget);
+    expect(find.text('Ekstrak teks dari galeri'), findsOneWidget);
+    expect(find.text('Ekstrak teks dari kamera'), findsOneWidget);
+    expect(find.text('Deskripsikan dari galeri'), findsOneWidget);
+    expect(find.text('Deskripsikan dari kamera'), findsOneWidget);
+    expect(find.textContaining('NIM: 244107020049'), findsNothing);
   });
 
-  testWidgets('fitur Speech-to-Text mengirimkan transkripsi audio ke asisten', (
+  testWidgets('menolak alamat pribadi sebelum ada pesan atau request', (
     tester,
   ) async {
     await tester.pumpWidget(buildTestableWidget());
     await tester.pumpAndSettle();
-
-    final micButton = find.byTooltip('Speech-to-Text');
-    await tester.tap(micButton);
-    await tester.pumpAndSettle();
-
-    expect(find.text('Speech-to-Text (Input Suara)'), findsOneWidget);
-    await tester.tap(find.text('"Kapan jadwal pengisian KRS semester depan?"'));
-    await tester.pumpAndSettle();
-
-    expect(
-      find.text('Kapan jadwal pengisian KRS semester depan?'),
-      findsOneWidget,
+    await tester.enterText(
+      find.byKey(const Key('chat_input_field')),
+      'Alamat: Jalan Contoh 3',
     );
-    expect(find.textContaining('Pengisian dan revisi KRS'), findsOneWidget);
+    await tester.tap(find.byKey(const Key('chat_send_button')));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('Hapus alamat'), findsOneWidget);
+    expect(find.text('Anda'), findsNothing);
   });
 
   testWidgets('tombol bersihkan obrolan mengosongkan percakapan', (
@@ -146,6 +136,8 @@ void main() {
     await tester.tap(find.byKey(const Key('chat_send_button')));
     await tester.pumpAndSettle();
 
+    await tester.drag(find.byType(ListView), const Offset(0, 500));
+    await tester.pumpAndSettle();
     expect(find.text('Tes halo'), findsOneWidget);
 
     final clearButton = find.byTooltip('Bersihkan Obrolan');

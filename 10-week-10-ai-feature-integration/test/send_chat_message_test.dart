@@ -21,6 +21,7 @@ class FakeAiChatRepository implements AiChatRepository {
     required String question,
     List<ChatMessage>? history,
   }) async* {
+    lastQuestion = question;
     yield 'Jawaban streaming';
   }
 
@@ -34,8 +35,10 @@ class FakeAiChatRepository implements AiChatRepository {
   Future<void> deleteApiKey() async {}
 
   @override
-  Future<Result<String>> recognizeText(String imagePathOrDescription) async =>
-      (value: 'OCR', failure: null);
+  Future<Result<String>> recognizeText(
+    String imagePathOrDescription, {
+    bool describe = false,
+  }) async => (value: 'OCR', failure: null);
 
   @override
   Future<Result<String>> speechToText(String audioPathOrDescription) async =>
@@ -89,6 +92,46 @@ void main() {
       expect(repository.lastQuestion, isNot(contains('081234567890')));
       expect(repository.lastQuestion, isNot(contains('+6281987654321')));
     });
+
+    test(
+      'jalur stream meredaksi nomor berformat dan email sebelum jaringan',
+      () async {
+        await useCase
+            .stream('Hubungi +62 812-3456-7890 atau demo@example.test')
+            .toList();
+        expect(
+          repository.lastQuestion,
+          'Hubungi [NO_HP_TERLINDUNGI] atau [EMAIL_TERLINDUNGI]',
+        );
+      },
+    );
+
+    test('menolak alamat dan sandi tanpa pola titik dua', () async {
+      for (final text in [
+        'alamat saya di sini',
+        'password saya rahasia',
+        'jalan Mawar nomor 1',
+      ]) {
+        final result = await useCase(question: text);
+        expect(result.failure, isA<ValidationFailure>());
+      }
+      expect(repository.lastQuestion, isNull);
+    });
+
+    test(
+      'stream menolak input kosong dan terlalu panjang tanpa request',
+      () async {
+        await expectLater(
+          useCase.stream('  ').toList(),
+          throwsA(isA<ValidationFailure>()),
+        );
+        await expectLater(
+          useCase.stream('x' * 501).toList(),
+          throwsA(isA<ValidationFailure>()),
+        );
+        expect(repository.lastQuestion, isNull);
+      },
+    );
 
     test('meneruskan pertanyaan valid ke repository', () async {
       const query = 'Kapan batas pembayaran UKT?';

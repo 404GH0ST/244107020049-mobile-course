@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:campus_notify/features/ai_chat/data/sources/ai_service.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -7,132 +9,248 @@ import 'package:http/testing.dart';
 
 import 'fake_secure_storage.dart';
 
+Map<String, dynamic> candidate(String text) => {
+  'candidates': [
+    {
+      'content': {
+        'parts': [
+          {'text': text},
+        ],
+      },
+    },
+  ],
+};
+String event(String text) => 'data: ${jsonEncode(candidate(text))}\n\n';
+
 void main() {
-  group('AiService unit tests', () {
-    test('menggunakan offline fallback saat API key belum diatur', () async {
-      final fakeStorage = FakeSecureStorage();
-      final aiService = AiService(storage: fakeStorage);
+  AiService service(
+    http.Client client, {
+    FakeSecureStorage? storage,
+    Duration? timeout,
+  }) => AiService(
+    storage: storage ?? FakeSecureStorage({'ai_api_key': 'test-key'}),
+    httpClient: client,
+    timeout: timeout ?? const Duration(seconds: 1),
+  );
 
-      final answer = await aiService.ask('Bagaimana cara pengisian KRS?');
-      expect(answer, contains('Pengisian dan revisi KRS'));
-    });
+  test('tanpa kunci tidak pernah menghubungi jaringan', () async {
+    final ai = service(
+      MockClient((_) async => throw StateError('No network expected')),
+      storage: FakeSecureStorage(),
+    );
+    expect(
+      await ai.ask('KRS'),
+      contains('Mode Offline: Kunci API belum diatur'),
+    );
+  });
 
-    test(
-      'mengirim prompt ke Gemini API saat API key tersedia dan response 200',
-      () async {
-        final fakeStorage = FakeSecureStorage({
-          'ai_api_key': 'test_api_key_123',
-        });
-        final mockClient = MockClient((request) async {
-          expect(
-            request.url.queryParameters['key'],
-            equals('test_api_key_123'),
-          );
-          final body = jsonDecode(request.body) as Map<String, dynamic>;
-          expect(body['contents'], isNotEmpty);
-
-          return http.Response(
-            jsonEncode({
-              'candidates': [
-                {
-                  'content': {
-                    'parts': [
-                      {'text': 'Jadwal kuliah dimulai pukul 07.30 WIB di GKB.'},
-                    ],
-                  },
-                },
-              ],
-            }),
-            200,
-            headers: {'content-type': 'application/json'},
-          );
-        });
-
-        final aiService = AiService(
-          storage: fakeStorage,
-          httpClient: mockClient,
+  test('stream SSE memancarkan hasil sebelum respons selesai dan menjaga header key', () async {
+    final controller = StreamController<List<int>>();
+    final ai = service(
+      MockClient.streaming((request, body) async {
+        expect(request.url.path, endsWith(':streamGenerateContent'));
+        expect(request.url.queryParameters, {'alt': 'sse'});
+        expect(request.headers['x-goog-api-key'], 'test-key');
+        expect(request.url.toString(), isNot(contains('test-key')));
+        final payload = jsonDecode(await body.bytesToString()) as Map;
+        expect(
+          payload['system_instruction']['parts'][0]['text'],
+          AiService.systemInstruction,
         );
-
-        final answer = await aiService.ask('Jadwal kuliah Senin?');
-        expect(answer, equals('Jadwal kuliah dimulai pukul 07.30 WIB di GKB.'));
-      },
+        expect(payload['generationConfig']['maxOutputTokens'], 512);
+        return http.StreamedResponse(controller.stream, 200);
+      }),
     );
-
-    test('menangani kuota 429 dengan beralih ke fallback offline', () async {
-      final fakeStorage = FakeSecureStorage({'ai_api_key': 'test_key'});
-      final mockClient = MockClient((_) async {
-        return http.Response('Quota exceeded', 429);
-      });
-
-      final aiService = AiService(storage: fakeStorage, httpClient: mockClient);
-
-      final answer = await aiService.ask('Info bayar UKT?');
-      expect(answer, contains('Pembayaran UKT'));
-      expect(answer, contains('basis data kampus offline'));
+    final first = Completer<String>();
+    final values = <String>[];
+    final subscription = ai.streamAsk('Halo').listen((value) {
+      values.add(value);
+      if (!first.isCompleted) first.complete(value);
     });
+    controller.add(utf8.encode(event('Halo ')));
+    expect(await first.future, 'Halo ');
+    final done = subscription.asFuture<void>();
+    controller.add(utf8.encode(event('mahasiswa.')));
+    await controller.close();
+    await done;
+    expect(values, ['Halo ', 'Halo mahasiswa.']);
+  });
 
-    test('melemparkan exception jika API key invalid 401', () async {
-      final fakeStorage = FakeSecureStorage({'ai_api_key': 'invalid_key'});
-      final mockClient = MockClient((_) async {
-        return http.Response('Unauthorized', 401);
-      });
+  test(
+    'parser mempertahankan UTF8 dan SSE yang terpecah antar chunk',
+    () async {
+      final bytes = utf8.encode(
+        ': ping\n\n${event('Halo, café!')}data: [DONE]\n\n',
+      );
+      final ai = service(
+        MockClient.streaming(
+          (_, _) async => http.StreamedResponse(
+            Stream.fromIterable(bytes.map((b) => [b])),
+            200,
+          ),
+        ),
+      );
+      expect(await ai.ask('Halo'), 'Halo, café!');
+    },
+  );
 
-      final aiService = AiService(storage: fakeStorage, httpClient: mockClient);
-
-      expect(() => aiService.ask('Halo'), throwsA(isA<Exception>()));
-    });
-
-    test('fallback ke pengetahuan lokal jika jaringan gagal', () async {
-      final fakeStorage = FakeSecureStorage({'ai_api_key': 'test_key'});
-      final mockClient = MockClient((_) async {
-        throw http.ClientException('Network connection failed');
-      });
-
-      final aiService = AiService(storage: fakeStorage, httpClient: mockClient);
-
-      final answer = await aiService.ask('Lokasi Gedung Kuliah Bersama?');
-      expect(answer, contains('Gedung Kuliah Bersama (GKB)'));
-      expect(answer, contains('Mode Offline'));
-    });
-
-    test('streamAsk memancarkan chunk teks bertahap', () async {
-      final fakeStorage = FakeSecureStorage();
-      final aiService = AiService(storage: fakeStorage);
-
-      final stream = aiService.streamAsk('beasiswa');
-      final chunks = await stream.toList();
-
-      expect(chunks, isNotEmpty);
-      expect(chunks.last, contains('beasiswa'));
-    });
-
-    test('recognizeText OCR mengekstrak informasi KTM', () async {
-      final aiService = AiService(storage: FakeSecureStorage());
-      final result = await aiService.recognizeText('ktm mahasiswa');
-
-      expect(result, contains('NIM: 244107020049'));
-      expect(result, contains('Agus Prasetyo'));
-    });
-
-    test('speechToText menerjemahkan suara ke teks', () async {
-      final aiService = AiService(storage: FakeSecureStorage());
-      final result = await aiService.speechToText('jadwal krs');
-
-      expect(result, contains('Kapan jadwal pengisian KRS'));
-    });
-
+  for (final status in [400, 401, 403, 404, 429, 500, 503]) {
     test(
-      'saveApiKey dan deleteApiKey mengelola storage dengan benar',
+      'HTTP $status menghasilkan fallback berlabel tanpa request ulang',
       () async {
-        final fakeStorage = FakeSecureStorage();
-        final aiService = AiService(storage: fakeStorage);
-
-        expect(await aiService.getApiKey(), isNull);
-        await aiService.saveApiKey('my_secret_key');
-        expect(await aiService.getApiKey(), equals('my_secret_key'));
-        await aiService.deleteApiKey();
-        expect(await aiService.getApiKey(), isNull);
+        var calls = 0;
+        final ai = service(
+          MockClient((_) async {
+            calls++;
+            return http.Response('DO_NOT_EXPOSE_PROVIDER_BODY', status);
+          }),
+        );
+        final answer = await ai.ask('KRS');
+        expect(answer, contains('Mode Offline:'));
+        expect(answer, isNot(contains('DO_NOT_EXPOSE_PROVIDER_BODY')));
+        expect(calls, 1);
       },
     );
+  }
+
+  test('network error tidak membocorkan URL atau API key', () async {
+    final ai = service(
+      MockClient(
+        (_) async => throw http.ClientException('secret URL test-key'),
+      ),
+    );
+    final answer = await ai.ask('UKT');
+    expect(answer, contains('Koneksi AI tidak tersedia'));
+    expect(answer, isNot(contains('test-key')));
+  });
+
+  test('timeout menghasilkan fallback ramah', () async {
+    final ai = service(
+      MockClient((_) => Completer<http.Response>().future),
+      timeout: const Duration(milliseconds: 10),
+    );
+    expect(await ai.ask('jadwal'), contains('batas waktu'));
+  });
+
+  for (final payload in [
+    'data: invalid-json\n\n',
+    'data: {}\n\n',
+    'data: {"candidates":[]}\n\n',
+  ]) {
+    test('respons invalid atau kosong menghasilkan fallback', () async {
+      final ai = service(MockClient((_) async => http.Response(payload, 200)));
+      expect(await ai.ask('Halo'), contains('Mode Offline:'));
+    });
+  }
+
+  test(
+    'cache sesi mencegah request berulang dan kedaluwarsa setelah 10 menit',
+    () async {
+      var calls = 0;
+      var time = DateTime(2026, 11, 4, 10);
+      final ai = AiService(
+        storage: FakeSecureStorage({'ai_api_key': 'test-key'}),
+        now: () => time,
+        httpClient: MockClient((_) async {
+          calls++;
+          return http.Response(event('Panduan umum.'), 200);
+        }),
+      );
+      await ai.ask('KRS');
+      expect(await ai.ask(' krs '), contains('Cache sesi'));
+      expect(calls, 1);
+      time = time.add(const Duration(minutes: 11));
+      await ai.ask('KRS');
+      expect(calls, 2);
+    },
+  );
+
+  test(
+    'batas harian disimpan dan tanggal berikutnya mengizinkan request',
+    () async {
+      final storage = FakeSecureStorage({
+        'ai_api_key': 'test-key',
+        'ai_usage': '2026-11-04|20',
+      });
+      var time = DateTime(2026, 11, 4);
+      var calls = 0;
+      final ai = AiService(
+        storage: storage,
+        now: () => time,
+        httpClient: MockClient((_) async {
+          calls++;
+          return http.Response(event('Halo'), 200);
+        }),
+      );
+      expect(await ai.ask('Halo'), contains('20 request'));
+      expect(calls, 0);
+      time = time.add(const Duration(days: 1));
+      expect(await ai.ask('Halo'), 'Halo');
+      expect(calls, 1);
+    },
+  );
+
+  test(
+    'OCR, deskripsi, dan STT mengirim byte aktual serta MIME yang sesuai',
+    () async {
+      final dir = await Directory.systemTemp.createTemp('week10-test');
+      addTearDown(() => dir.delete(recursive: true));
+      final image = await File('${dir.path}/notice.png')
+          .writeAsBytes([137, 80, 78, 71]);
+      final audio = await File('${dir.path}/voice.m4a')
+          .writeAsBytes([0, 1, 2, 3]);
+      final prompts = <String>[];
+      final ai = service(
+        MockClient((request) async {
+          expect(request.url.path, endsWith(':generateContent'));
+          final parts =
+              jsonDecode(request.body)['contents'][0]['parts'] as List;
+          prompts.add(parts[0]['text'] as String);
+          final media = parts[1]['inline_data'] as Map;
+          expect(base64Decode(media['data'] as String), isNotEmpty);
+          expect(media['mime_type'], anyOf('image/png', 'audio/mp4'));
+          return http.Response(
+            jsonEncode(candidate('Hasil dari fixture API.')),
+            200,
+          );
+        }),
+      );
+      expect(await ai.recognizeText(image.path), 'Hasil dari fixture API.');
+      await ai.recognizeText(image.path, describe: true);
+      await ai.speechToText(audio.path);
+      expect(prompts[0], contains('Ekstrak teks'));
+      expect(prompts[1], contains('Deskripsikan objek'));
+      expect(prompts[2], contains('Transkripsikan'));
+    },
+  );
+
+  test('media offline gagal jelas dan tidak mengarang hasil', () async {
+    final file = await File('${Directory.systemTemp.path}/week10-empty.png')
+        .writeAsBytes([1]);
+    addTearDown(file.delete);
+    final ai = service(
+      MockClient((_) async => throw StateError('No network')),
+      storage: FakeSecureStorage(),
+    );
+    await expectLater(ai.recognizeText(file.path), throwsA(isA<Exception>()));
+  });
+
+  test('berkas lebih dari 4 MB ditolak sebelum jaringan', () async {
+    final file = await File('${Directory.systemTemp.path}/week10-large.png')
+        .writeAsBytes(List.filled(4 * 1024 * 1024 + 1, 0));
+    addTearDown(file.delete);
+    final ai = service(MockClient((_) async => throw StateError('No network')));
+    await expectLater(ai.recognizeText(file.path), throwsA(isA<Exception>()));
+  });
+
+  test('simpan dan hapus kunci secure storage', () async {
+    final ai = service(
+      MockClient((_) async => http.Response('', 500)),
+      storage: FakeSecureStorage(),
+    );
+    await ai.saveApiKey(' test-key ');
+    expect(await ai.getApiKey(), 'test-key');
+    await ai.deleteApiKey();
+    expect(await ai.getApiKey(), isNull);
   });
 }

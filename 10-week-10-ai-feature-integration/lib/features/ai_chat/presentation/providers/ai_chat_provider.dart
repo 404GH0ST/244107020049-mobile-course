@@ -1,59 +1,28 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../app/ai_providers.dart';
 import '../../domain/entities/chat_message.dart';
-import '../../domain/repositories/ai_chat_repository.dart';
-import '../../domain/usecases/process_ocr.dart';
-import '../../domain/usecases/process_stt.dart';
 import '../../domain/usecases/send_chat_message.dart';
-import '../../data/repositories/ai_chat_repository_impl.dart';
-import '../../data/sources/ai_service.dart';
+export '../../../../app/ai_providers.dart';
 
-final aiServiceProvider = Provider<AiService>((ref) {
-  return AiService();
-});
-
-final aiChatRepositoryProvider = Provider<AiChatRepository>((ref) {
-  return AiChatRepositoryImpl(ref.watch(aiServiceProvider));
-});
-
-final sendChatMessageUseCaseProvider = Provider<SendChatMessage>((ref) {
-  return SendChatMessage(ref.watch(aiChatRepositoryProvider));
-});
-
-final processOcrUseCaseProvider = Provider<ProcessOcr>((ref) {
-  return ProcessOcr(ref.watch(aiChatRepositoryProvider));
-});
-
-final processSttUseCaseProvider = Provider<ProcessSpeechToText>((ref) {
-  return ProcessSpeechToText(ref.watch(aiChatRepositoryProvider));
-});
-
-class ApiKeyStatusNotifier extends Notifier<String?> {
+class ApiKeyStatusNotifier extends AsyncNotifier<bool> {
   @override
-  String? build() {
-    _loadKey();
-    return null;
-  }
-
-  Future<void> _loadKey() async {
-    final repo = ref.read(aiChatRepositoryProvider);
-    state = await repo.getApiKey();
-  }
+  Future<bool> build() async =>
+      (await ref.read(aiChatRepositoryProvider).getApiKey())?.isNotEmpty ??
+      false;
 
   Future<void> setKey(String key) async {
-    final repo = ref.read(aiChatRepositoryProvider);
-    await repo.saveApiKey(key);
-    state = key.trim();
+    await ref.read(aiChatRepositoryProvider).saveApiKey(key);
+    if (ref.mounted) state = const AsyncData(true);
   }
 
   Future<void> clearKey() async {
-    final repo = ref.read(aiChatRepositoryProvider);
-    await repo.deleteApiKey();
-    state = null;
+    await ref.read(aiChatRepositoryProvider).deleteApiKey();
+    if (ref.mounted) state = const AsyncData(false);
   }
 }
 
-final apiKeyStatusProvider = NotifierProvider<ApiKeyStatusNotifier, String?>(
+final apiKeyStatusProvider = AsyncNotifierProvider<ApiKeyStatusNotifier, bool>(
   ApiKeyStatusNotifier.new,
 );
 
@@ -62,149 +31,159 @@ class ChatState {
     this.messages = const [],
     this.isLoading = false,
     this.errorMessage,
+    this.canRetry = false,
   });
-
   final List<ChatMessage> messages;
   final bool isLoading;
   final String? errorMessage;
-
+  final bool canRetry;
   ChatState copyWith({
     List<ChatMessage>? messages,
     bool? isLoading,
     String? errorMessage,
-  }) {
-    return ChatState(
-      messages: messages ?? this.messages,
-      isLoading: isLoading ?? this.isLoading,
-      errorMessage: errorMessage,
-    );
-  }
+    bool canRetry = false,
+  }) => ChatState(
+    messages: messages ?? this.messages,
+    isLoading: isLoading ?? this.isLoading,
+    errorMessage: errorMessage,
+    canRetry: canRetry,
+  );
 }
 
 class ChatNotifier extends Notifier<ChatState> {
+  int _generation = 0;
+  String? _lastQuestion;
   @override
-  ChatState build() {
-    return ChatState(
-      messages: [
-        ChatMessage(
-          id: 'welcome',
-          text: 'Halo! Saya Asisten AI Kampus Polinema. Silakan tanyakan informasi seputar jadwal, KRS, beasiswa, atau gunakan fitur OCR dan Voice.',
-          sender: MessageSender.assistant,
-          timestamp: DateTime.now(),
-        ),
-      ],
-    );
-  }
+  ChatState build() => ChatState(
+    messages: [
+      ChatMessage(
+        id: 'welcome',
+        text: 'Halo! Saya Asisten AI Kampus Polinema. Tanyakan panduan umum atau gunakan gambar dan suara. Jangan kirim data pribadi. Jawaban AI perlu diperiksa pada kanal resmi kampus.',
+        sender: MessageSender.assistant,
+        timestamp: DateTime.now(),
+      ),
+    ],
+  );
 
   Future<void> sendMessage(String text) async {
-    final trimmed = text.trim();
-    if (trimmed.isEmpty || state.isLoading) return;
-
-    final userMessage = ChatMessage(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
-      text: trimmed,
-      sender: MessageSender.user,
-      timestamp: DateTime.now(),
-    );
-
-    state = state.copyWith(
-      messages: [...state.messages, userMessage],
-      isLoading: true,
-      errorMessage: null,
-    );
-
-    final useCase = ref.read(sendChatMessageUseCaseProvider);
-    final result = await useCase(question: trimmed, history: state.messages);
-
-    if (result.failure != null) {
-      state = state.copyWith(
-        isLoading: false,
-        errorMessage: result.failure!.message,
-      );
+    if (state.isLoading) return;
+    final validation = SendChatMessage.validate(text);
+    if (validation != null) {
+      state = state.copyWith(errorMessage: validation);
       return;
     }
-
-    final answer = result.value ?? '';
-    final isFallback =
-        answer.contains('Offline') ||
-        answer.contains('kampus offline') ||
-        answer.contains('basis data');
-
-    final assistantMessage = ChatMessage(
-      id: (DateTime.now().millisecondsSinceEpoch + 1).toString(),
-      text: answer,
-      sender: MessageSender.assistant,
-      timestamp: DateTime.now(),
-      isOfflineFallback: isFallback,
-    );
-
-    state = state.copyWith(
-      messages: [...state.messages, assistantMessage],
-      isLoading: false,
-      errorMessage: null,
-    );
+    _lastQuestion = text;
+    final generation = ++_generation;
+    final id = DateTime.now().microsecondsSinceEpoch.toString();
+    final messages = [
+      ...state.messages,
+      ChatMessage(
+        id: '$id-user',
+        text: SendChatMessage.sanitizeInput(text.trim()),
+        sender: MessageSender.user,
+        timestamp: DateTime.now(),
+      ),
+    ];
+    state = state.copyWith(messages: messages, isLoading: true);
+    try {
+      await for (final answer
+          in ref.read(sendChatMessageUseCaseProvider).stream(text)) {
+        if (!ref.mounted || generation != _generation) return;
+        final fallback = answer.contains('Mode Offline:');
+        state = state.copyWith(
+          isLoading: true,
+          canRetry: fallback && ref.read(apiKeyStatusProvider).value == true,
+          messages: [
+            ...messages,
+            ChatMessage(
+              id: '$id-answer',
+              text: SendChatMessage.sanitizeInput(answer),
+              sender: MessageSender.assistant,
+              timestamp: DateTime.now(),
+              isOfflineFallback: fallback,
+            ),
+          ],
+          errorMessage: fallback && ref.read(apiKeyStatusProvider).value == true
+              ? 'Service AI tidak tersedia. Panduan offline ditampilkan. Coba lagi jika koneksi atau pengaturan sudah diperbaiki.'
+              : null,
+        );
+      }
+    } catch (_) {
+      if (ref.mounted && generation == _generation) {
+        state = state.copyWith(
+          errorMessage: 'Jawaban gagal dimuat. Coba lagi.',
+          canRetry: true,
+        );
+      }
+    } finally {
+      if (ref.mounted && generation == _generation) {
+        state = state.copyWith(
+          isLoading: false,
+          errorMessage: state.errorMessage,
+          canRetry: state.canRetry,
+        );
+      }
+    }
   }
 
-  Future<void> sendOcr(String description) async {
-    final ocrUseCase = ref.read(processOcrUseCaseProvider);
-    state = state.copyWith(isLoading: true, errorMessage: null);
-
-    final result = await ocrUseCase(description);
-    if (result.failure != null) {
-      state = state.copyWith(
-        isLoading: false,
-        errorMessage: result.failure!.message,
-      );
-      return;
+  Future<void> handleErrorAction(bool retryable) async {
+    if (retryable) {
+      await retry();
+    } else {
+      state = state.copyWith();
     }
-
-    final ocrText = result.value ?? '';
-    final ocrMessage = ChatMessage(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
-      text: ocrText,
-      sender: MessageSender.system,
-      timestamp: DateTime.now(),
-    );
-
-    state = state.copyWith(
-      messages: [...state.messages, ocrMessage],
-      isLoading: false,
-      errorMessage: null,
-    );
   }
 
-  Future<void> sendVoice(String sampleAudioQuery) async {
-    final sttUseCase = ref.read(processSttUseCaseProvider);
-    state = state.copyWith(isLoading: true, errorMessage: null);
+  Future<void> retry() async {
+    if (_lastQuestion != null) await sendMessage(_lastQuestion!);
+  }
 
-    final result = await sttUseCase(sampleAudioQuery);
-    if (result.failure != null) {
-      state = state.copyWith(
-        isLoading: false,
-        errorMessage: result.failure!.message,
-      );
-      return;
-    }
-
-    final transcribedText = result.value ?? '';
-    state = state.copyWith(isLoading: false);
-
-    // Automatically send transcribed text to assistant
-    await sendMessage(transcribedText);
+  Future<String?> processMedia(
+    String path, {
+    bool audio = false,
+    bool describe = false,
+  }) async {
+    if (state.isLoading) return null;
+    final generation = ++_generation;
+    state = state.copyWith(isLoading: true);
+    final repository = ref.read(aiChatRepositoryProvider);
+    final result = audio
+        ? await repository.speechToText(path)
+        : await repository.recognizeText(path, describe: describe);
+    if (!ref.mounted || generation != _generation) return null;
+    final text = result.value == null
+        ? null
+        : SendChatMessage.sanitizeInput(result.value!);
+    state = state.copyWith(
+      isLoading: false,
+      errorMessage: result.failure == null ? null : 'Media tidak dapat diproses. Periksa kunci API, koneksi, dan format berkas. Coba lagi tanpa data pribadi.',
+      messages: text == null || audio
+          ? state.messages
+          : [
+              ...state.messages,
+              ChatMessage(
+                id: DateTime.now().microsecondsSinceEpoch.toString(),
+                text: '${describe ? 'Deskripsi gambar' : 'Hasil OCR'}: $text',
+                sender: MessageSender.assistant,
+                timestamp: DateTime.now(),
+              ),
+            ],
+    );
+    return text;
   }
 
   void clearChat() {
+    ++_generation;
+    _lastQuestion = null;
     state = ChatState(
       messages: [
         ChatMessage(
-          id: 'welcome_reset',
+          id: 'reset',
           text: 'Percakapan dibersihkan. Ada yang dapat Asisten Kampus bantu lagi?',
           sender: MessageSender.assistant,
           timestamp: DateTime.now(),
         ),
       ],
-      isLoading: false,
-      errorMessage: null,
     );
   }
 }

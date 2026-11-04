@@ -16,7 +16,10 @@ abstract interface class AiChatRepository {
   Future<void> saveApiKey(String key);
   Future<void> deleteApiKey();
 
-  Future<Result<String>> recognizeText(String imagePathOrDescription);
+  Future<Result<String>> recognizeText(
+    String imagePathOrDescription, {
+    bool describe = false,
+  });
   Future<Result<String>> speechToText(String audioPathOrDescription);
   String getOfflineFallbackAnswer(String question);
 }
