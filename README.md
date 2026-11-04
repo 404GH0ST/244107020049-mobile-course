@@ -23,3 +23,4 @@ Repository ini berisi kumpulan kode sumber, praktikum, mini assignment, dan doku
 | 07 | Clean Architecture | [`07-week-7-clean-architecture`](./07-week-7-clean-architecture) |
 | 08 | Mid Project Review & Code Review | [`08-week-8-mid-project-review`](./08-week-8-mid-project-review) |
 | 09 | AI-Assisted Development & Vibe Coding | [`09-week-9-ai-assisted-development`](./09-week-9-ai-assisted-development) |
+| 10 | Integrasi Fitur AI | [`10-week-10-ai-feature-integration`](./10-week-10-ai-feature-integration) |
