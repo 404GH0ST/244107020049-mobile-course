@@ -25,15 +25,39 @@ class _HomePageState extends ConsumerState<HomePage> {
         title: const Text('Campus Notify'),
         actions: [
           IconButton(
+            tooltip: 'Tanya Asisten AI',
+            onPressed: () => context.push(AppRoutes.chat),
+            icon: const Icon(Icons.smart_toy_outlined),
+          ),
+          IconButton(
             tooltip: 'Keluar',
             onPressed: () => ref.read(authStateProvider.notifier).logout(),
             icon: const Icon(Icons.logout),
           ),
         ],
       ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () => context.push(AppRoutes.chat),
+        icon: const Icon(Icons.smart_toy_outlined),
+        label: const Text('Tanya Asisten AI'),
+      ),
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: [
+          Card(
+            color: Theme.of(context).colorScheme.primaryContainer
+                .withValues(alpha: 0.35),
+            child: ListTile(
+              leading: const CircleAvatar(child: Icon(Icons.auto_awesome)),
+              title: const Text('Asisten AI Kampus Pintar'),
+              subtitle: const Text(
+                'Tanya jadwal, KRS, info akademik, OCR & Voice',
+              ),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => context.push(AppRoutes.chat),
+            ),
+          ),
+          const SizedBox(height: 16),
           Text('Pengumuman', style: Theme.of(context).textTheme.headlineMedium),
           const SizedBox(height: 8),
           const Text('Informasi perkuliahan dan notifikasi kampus.'),
