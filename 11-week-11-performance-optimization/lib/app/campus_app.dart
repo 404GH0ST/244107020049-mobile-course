@@ -39,6 +39,8 @@ class _CampusAppState extends ConsumerState<CampusApp> {
     return MaterialApp.router(
       title: 'Campus Notify',
       debugShowCheckedModeBanner: false,
+      // Diaktifkan saat profiling: --dart-define=PERF_OVERLAY=true
+      showPerformanceOverlay: const bool.fromEnvironment('PERF_OVERLAY'),
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xff1769aa)),
         useMaterial3: true,
