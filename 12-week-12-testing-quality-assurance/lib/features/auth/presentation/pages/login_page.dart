@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../providers/auth_provider.dart';
 import '../../../../core/failures.dart';
+import '../../domain/login_validation.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
@@ -52,26 +53,25 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   const Chip(label: Text('Praktikum 6 • Login mock')),
                   const SizedBox(height: 20),
                   TextFormField(
+                    key: const Key('login-email-field'),
                     controller: _email,
                     keyboardType: TextInputType.emailAddress,
                     decoration: const InputDecoration(
                       labelText: 'Email',
                       border: OutlineInputBorder(),
                     ),
-                    validator: (value) => value != null && value.contains('@')
-                        ? null
-                        : 'Masukkan email yang valid',
+                    validator: validateEmail,
                   ),
                   const SizedBox(height: 16),
                   TextFormField(
+                    key: const Key('login-password-field'),
                     controller: _password,
                     obscureText: true,
                     decoration: const InputDecoration(
                       labelText: 'Kata sandi',
                       border: OutlineInputBorder(),
                     ),
-                    validator: (value) =>
-                        (value?.length ?? 0) >= 6 ? null : 'Minimal 6 karakter',
+                    validator: validatePassword,
                   ),
                   const SizedBox(height: 12),
                   const Text(
@@ -89,6 +89,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     ),
                   const SizedBox(height: 20),
                   FilledButton(
+                    key: const Key('login-submit-button'),
                     onPressed: auth.isLoading
                         ? null
                         : () {

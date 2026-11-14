@@ -133,7 +133,13 @@ class _HomeFeedState extends ConsumerState<_HomeFeed> {
         // Lazy: hanya item yang terlihat yang di-build dan di-paint.
         sliver: SliverList.builder(
           itemCount: value.items.length,
-          itemBuilder: (_, index) => AnnouncementTile(item: value.items[index]),
+          itemBuilder: (_, index) {
+            final item = value.items[index];
+            return AnnouncementTile(
+              key: ValueKey('announcement-tile-${item.id}'),
+              item: item,
+            );
+          },
         ),
       ),
     SliverToBoxAdapter(

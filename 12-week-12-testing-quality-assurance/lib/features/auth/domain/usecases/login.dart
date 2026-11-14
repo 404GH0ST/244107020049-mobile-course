@@ -1,4 +1,5 @@
 import '../../../../core/failures.dart';
+import '../login_validation.dart';
 import '../repositories/auth_repository.dart';
 
 class Login {
@@ -9,7 +10,8 @@ class Login {
     required String password,
   }) async {
     final normalized = email.trim();
-    if (!normalized.contains('@') || password.length < 6) {
+    if (validateEmail(normalized) != null ||
+        validatePassword(password) != null) {
       return (
         value: null,
         failure: const ValidationFailure('Email atau kata sandi tidak valid.'),
