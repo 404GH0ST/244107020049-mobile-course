@@ -1,6 +1,6 @@
 """Run the Week 11 profile scenario on emulator-5554 and capture emulator evidence.
 
-Usage: python3 tool/run_profile.py <label>   (e.g. before / after)
+Usage: python3 tool/run_profile.py <label> [--no-overlay]   (e.g. before / after)
 Writes build/perf/<label>-*.json, screenshots/<label>-profile.png,
 and build/perf/<label>-meminfo.txt.
 """
@@ -10,7 +10,9 @@ import re
 import subprocess
 import sys
 
-label = sys.argv[1] if len(sys.argv) > 1 else 'run'
+args = [a for a in sys.argv[1:] if not a.startswith('--')]
+label = args[0] if args else 'run'
+overlay = '--no-overlay' not in sys.argv
 root = Path(__file__).resolve().parents[1]
 package = 'id.ac.polinema.campus_notify'
 adb = ['adb', '-s', 'emulator-5554']
@@ -20,7 +22,8 @@ meminfo = (root / 'build' / 'perf' / f'{label}-meminfo.txt').open('w')
 command = ['flutter', 'drive', '--profile', '--no-dds',
            '--driver=test_driver/perf_driver.dart',
            '--target=integration_test/perf_test.dart',
-           '--dart-define=PERF_OVERLAY=true', '-d', 'emulator-5554']
+           f'--dart-define=PERF_OVERLAY={str(overlay).lower()}',
+           '-d', 'emulator-5554']
 env = dict(os.environ, PERF_LABEL=label)
 proc = subprocess.Popen(command, cwd=root, env=env, stdout=subprocess.PIPE,
                         stderr=subprocess.STDOUT, text=True, bufsize=1)

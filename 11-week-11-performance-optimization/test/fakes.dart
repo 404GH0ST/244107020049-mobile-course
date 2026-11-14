@@ -69,8 +69,14 @@ class FakeAnnouncementRepository implements AnnouncementRepository {
   }
 
   @override
-  Future<Result<List<Announcement>>> fetchAnnouncements() async {
+  Future<Result<AnnouncementPage>> fetchAnnouncements({
+    required int page,
+    int pageSize = 20,
+  }) async {
     final item = await getAnnouncement('3');
-    return (value: item.value == null ? null : [item.value!], failure: failure);
+    return (
+      value: item.value == null ? null : (items: [item.value!], hasMore: false),
+      failure: failure,
+    );
   }
 }

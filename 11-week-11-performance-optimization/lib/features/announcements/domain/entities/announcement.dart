@@ -10,3 +10,6 @@ class Announcement {
   final String subtitle;
   final String body;
 }
+
+/// Satu halaman feed; [hasMore] false berarti tidak perlu request lanjutan.
+typedef AnnouncementPage = ({List<Announcement> items, bool hasMore});

@@ -15,7 +15,9 @@ class AnnouncementPage extends ConsumerWidget {
     appBar: AppBar(
       title: Text('Pengumuman #$id'),
       leading: IconButton(
-        onPressed: () => context.go(AppRoutes.home),
+        // Dari list: pop agar HomePage tetap utuh; dari deep link: ke beranda.
+        onPressed: () =>
+            context.canPop() ? context.pop() : context.go(AppRoutes.home),
         icon: const Icon(Icons.arrow_back),
       ),
     ),

@@ -1,5 +1,5 @@
 abstract interface class AnnouncementDataSource {
-  Future<List<Map<String, Object?>>> fetch();
+  Future<List<Map<String, Object?>>> fetch({int offset = 0, int limit = 20});
   Future<Map<String, Object?>> get(String id);
 }
 
@@ -49,10 +49,14 @@ class AnnouncementSource implements AnnouncementDataSource {
   }
 
   @override
-  Future<List<Map<String, Object?>>> fetch() async {
+  Future<List<Map<String, Object?>>> fetch({
+    int offset = 0,
+    int limit = 20,
+  }) async {
     requests++;
     await Future<void>.delayed(latency);
-    return [for (var n = 1; n <= total; n++) _row(n)];
+    final end = (offset + limit).clamp(0, total);
+    return [for (var n = offset + 1; n <= end; n++) _row(n)];
   }
 
   @override
