@@ -25,3 +25,4 @@ Repository ini berisi kumpulan kode sumber, praktikum, mini assignment, dan doku
 | 09 | AI-Assisted Development & Vibe Coding | [`09-week-9-ai-assisted-development`](./09-week-9-ai-assisted-development) |
 | 10 | Integrasi Fitur AI | [`10-week-10-ai-feature-integration`](./10-week-10-ai-feature-integration) |
 | 11 | Optimasi Performa | [`11-week-11-performance-optimization`](./11-week-11-performance-optimization) |
+| 12 | Testing & Quality Assurance | [`12-week-12-testing-quality-assurance`](./12-week-12-testing-quality-assurance) |
