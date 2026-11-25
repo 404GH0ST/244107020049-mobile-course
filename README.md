@@ -26,3 +26,4 @@ Repository ini berisi kumpulan kode sumber, praktikum, mini assignment, dan doku
 | 10 | Integrasi Fitur AI | [`10-week-10-ai-feature-integration`](./10-week-10-ai-feature-integration) |
 | 11 | Optimasi Performa | [`11-week-11-performance-optimization`](./11-week-11-performance-optimization) |
 | 12 | Testing & Quality Assurance | [`12-week-12-testing-quality-assurance`](./12-week-12-testing-quality-assurance) |
+| 13 | CI/CD & Otomatisasi | [`13-week-13-ci-cd-automation`](./13-week-13-ci-cd-automation) |
