@@ -4,7 +4,7 @@ import 'package:campus_notify/app/presentation/pages/home_page.dart';
 import 'package:campus_notify/app/providers.dart';
 import 'package:campus_notify/core/failures.dart';
 import 'package:campus_notify/features/announcements/domain/entities/announcement.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 

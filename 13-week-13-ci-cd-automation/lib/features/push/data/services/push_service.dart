@@ -3,7 +3,6 @@ import 'dart:async';
 import '../../domain/repositories/push_repository.dart';
 import '../../domain/repositories/device_repository.dart';
 
-import '../../../../firebase_options.dart';
 import '../../../../core/format.dart';
 import '../../../../core/failures.dart';
 
@@ -14,7 +13,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Firebase.initializeApp();
   // Isolate terpisah: jangan akses BuildContext, router, atau Riverpod.
   // Notification payload ditampilkan Android; jangan buat banner kedua.
   debugPrint(

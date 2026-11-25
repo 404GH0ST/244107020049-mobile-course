@@ -6,7 +6,7 @@ import 'package:campus_notify/features/announcements/data/sources/announcement_s
 import 'package:campus_notify/features/announcements/presentation/providers/announcement_providers.dart';
 import 'package:campus_notify/features/announcements/presentation/pages/announcement_page.dart';
 import 'package:campus_notify/features/auth/presentation/providers/auth_provider.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 

@@ -5,7 +5,7 @@ import 'package:campus_notify/app/campus_app.dart';
 import 'package:campus_notify/features/ai_chat/data/sources/ai_service.dart';
 import 'package:campus_notify/features/ai_chat/presentation/pages/chat_screen.dart';
 import 'package:campus_notify/features/ai_chat/presentation/providers/ai_chat_provider.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
